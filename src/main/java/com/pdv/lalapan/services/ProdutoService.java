@@ -21,6 +21,7 @@ public class ProdutoService {
     public ProdutoResponseDTO create(ProdutoCreatedDTO dto) {
         Produto produto = new Produto();
         produto.setNome(dto.nome());
+        produto.setCodigo(dto.codigo());
         produto.setCategoria(dto.categoria());
         produto.setUnidade(dto.unidade());
         produto.setPreco(dto.preco());

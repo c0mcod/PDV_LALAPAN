@@ -85,6 +85,7 @@ public class VendaService {
 
     @Transactional
     public VendaFinalizadaResponseDTO fecharVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
+        // Validação
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada."));
 

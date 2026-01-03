@@ -16,6 +16,7 @@ public class Produto {
 
     private String nome;
     private BigDecimal preco = BigDecimal.ZERO;
+    private String codigo;
     private double quantidadeEstoque;
 
     @Enumerated(EnumType.STRING)
@@ -85,5 +86,13 @@ public class Produto {
 
     public void setVendaItens(List<VendaItens> vendaItens) {
         this.vendaItens = vendaItens;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 }
