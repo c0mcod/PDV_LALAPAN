@@ -3,6 +3,8 @@ package com.pdv.lalapan.services;
 import com.pdv.lalapan.dto.ProdutoCreatedDTO;
 import com.pdv.lalapan.dto.ProdutoResponseDTO;
 import com.pdv.lalapan.entities.Produto;
+import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
+import com.pdv.lalapan.exceptions.ProdutoNaoEncontradoException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -34,14 +36,14 @@ public class ProdutoService {
 
     public ProdutoResponseDTO buscarPorId(Long id) {
         Produto produto = prodRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado."));
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         return new ProdutoResponseDTO(produto);
     }
 
     public void delete(Long id) {
         if (!prodRepo.existsById(id)) {
-            throw new EntityNotFoundException("Produto não encontrado.");
+            throw new ProdutoInexistenteException(id);
         }
         prodRepo.deleteById(id);
     }
