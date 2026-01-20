@@ -1,12 +1,10 @@
 package com.pdv.lalapan.services;
 
-import com.pdv.lalapan.dto.ProdutoAtualizadoDTO;
-import com.pdv.lalapan.dto.ProdutoCreatedDTO;
-import com.pdv.lalapan.dto.ProdutoEstoqueBaixoDTO;
-import com.pdv.lalapan.dto.ProdutoResponseDTO;
+import com.pdv.lalapan.dto.*;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,5 +74,16 @@ public class ProdutoService {
                 .stream()
                 .map(ProdutoEstoqueBaixoDTO::fromEntity)
                 .toList();
+    }
+
+    @Transactional
+    public ProdutoResponseDTO registrarEntrada(Long produtoId, EntradaProdutoRequestDTO dto) {
+        Produto produto = prodRepo.findById(produtoId)
+                .orElseThrow(() -> new ProdutoInexistenteException(produtoId));
+
+        produto.adicionarEstoque(dto.quantidade());
+        Produto produtoSalvo = prodRepo.save(produto);
+
+        return new ProdutoResponseDTO(produtoSalvo);
     }
 }

@@ -1,5 +1,6 @@
 package com.pdv.lalapan.controllers;
 
+import com.pdv.lalapan.dto.EntradaProdutoRequestDTO;
 import com.pdv.lalapan.dto.ProdutoCreatedDTO;
 import com.pdv.lalapan.dto.ProdutoEstoqueBaixoDTO;
 import com.pdv.lalapan.dto.ProdutoResponseDTO;
@@ -47,5 +48,11 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoEstoqueBaixoDTO>> listarEstoqueBaixo() {
         List<ProdutoEstoqueBaixoDTO> produtos = produtoService.listarEstoqueBaixo();
         return ResponseEntity.ok(produtos);
+    }
+
+    @PostMapping("/{id}/adicionar-estoque")
+    public ResponseEntity<ProdutoResponseDTO> adicionar(@PathVariable Long id, @RequestBody EntradaProdutoRequestDTO request) {
+        ProdutoResponseDTO produtoAtualizado = produtoService.registrarEntrada(id, request);
+        return ResponseEntity.ok(produtoAtualizado);
     }
 }

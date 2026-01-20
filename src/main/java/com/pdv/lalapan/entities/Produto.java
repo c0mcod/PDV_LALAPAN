@@ -2,6 +2,7 @@ package com.pdv.lalapan.entities;
 
 import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.Unidade;
+import com.pdv.lalapan.exceptions.QuantidadeInvalidaException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -107,5 +108,12 @@ public class Produto {
 
     public boolean isEstoqueBaixo() {
         return this.quantidadeEstoque <= this.estoqueMinimo;
+    }
+
+    public void adicionarEstoque(double quantidade) {
+        if(quantidade <= 0) {
+            throw new QuantidadeInvalidaException(quantidade);
+        }
+        this.quantidadeEstoque += quantidade;
     }
 }
