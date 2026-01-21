@@ -10,7 +10,28 @@ import java.util.List;
 
 @Entity
 public class Produto {
-
+    /*
+    *   ATRIBUTOS DA ENTIDADE PARA CONSULTA EM ORDEM:
+    *   - ID
+    *   - nome
+    *   - preco
+    *   - codigo
+    *   - estoqueMinimo
+    *   - quantidadeEstoque
+    *   - unidade
+    *   - categoria
+    * ---------------------------------------------------------------
+    *   ESQUEMA RAW PARA TESTE EM POSTMAN:
+    *   {
+    *       "nome":,
+    *       "preco":,
+    *       "codigo":,
+    *       "estoqueMinimo":,
+    *       "quantidadeEstoque":,
+    *       "unidade":,
+    *       "categoria"
+    * }
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
