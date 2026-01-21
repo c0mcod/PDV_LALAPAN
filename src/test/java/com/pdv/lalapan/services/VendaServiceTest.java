@@ -67,7 +67,6 @@ class VendaServiceTest {
 
     @Test
     void deveFinalizarVenda() {
-
         // ====== ARRANGE ======
         Produto produto = criarProduto("SUCO DE MARACUJÁ", 100.00);
         VendaAberturaDTO novaVenda = vendaService.iniciarVenda();
@@ -89,7 +88,25 @@ class VendaServiceTest {
     }
 
     @Test
-    void deveForcarFechamento() {
+    void deveForcarFechamentoComEstoqueInsuficiente() {
+        // ====== ARRANGE ======
+        // Definido que estoque para sabão é 5.
+        Produto produto = criarProduto("SABÃO", 5.00);
+        VendaAberturaDTO venda = vendaService.iniciarVenda();
+        vendaService.adicionarItem(venda.vendaId(), new VendaAddItemRequestDTO(produto.getId(), 6));
 
+        // ====== ACT ======
+        VendaFinalizadaResponseDTO response = vendaService.forcarVendaFechada(
+                venda.vendaId(),
+                new VendaFinalizadaRequestDTO(MetodoPagamento.DEBITO)
+        );
+
+        // ====== ASSERT ======
+        assertNotNull(response);
+
+        Produto atualizado = prodRepo.findById(produto.getId()).get();
+        assertEquals(-1.0, atualizado.getQuantidadeEstoque());
+        assertTrue(atualizado.getQuantidadeEstoque() < 0);
     }
+
 }
