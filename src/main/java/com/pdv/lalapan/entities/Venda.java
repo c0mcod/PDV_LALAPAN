@@ -168,7 +168,7 @@ public class Venda {
 
     public void removerItem(Long vendaItemId) {
         if(this.status != StatusVenda.ABERTA) {
-            throw new RuntimeException("Não é possível remover itens de uma venda que está aberta.");
+            throw new RuntimeException("Não é possível remover itens de uma venda que não está aberta.");
         }
 
         boolean removido = this.itens.removeIf(item ->

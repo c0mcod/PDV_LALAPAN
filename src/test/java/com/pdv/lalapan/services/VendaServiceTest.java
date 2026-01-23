@@ -2,11 +2,13 @@ package com.pdv.lalapan.services;
 
 import com.pdv.lalapan.dto.*;
 import com.pdv.lalapan.entities.Produto;
+import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.enums.Unidade;
 import com.pdv.lalapan.repositories.ProdutoRepository;
+import com.pdv.lalapan.repositories.VendaRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ class VendaServiceTest {
     @Autowired
     private ProdutoRepository prodRepo;
 
+    @Autowired
+    private VendaRepository vendaRepo;
+
     private Produto criarProduto(String nome, double estoque) {
         Produto p = new Produto();
         p.setNome(nome);
@@ -38,8 +43,6 @@ class VendaServiceTest {
 
         return prodRepo.save(p);
     }
-
-    private
 
     @Test
     void deveCriarVendaComSucesso() {
@@ -127,5 +130,42 @@ class VendaServiceTest {
         // ====== ASSERT ======
         assertNotNull(response);
         assertEquals(StatusVenda.CANCELADA, response.status());
+    }
+
+    @Test
+    void deveCancelarItemVenda() {
+        // ====== ARRANGE ======
+        Produto produto = criarProduto("ARROZ", 100.00);
+        Produto produto2 = criarProduto("CARNE", 100.00);
+
+        VendaAberturaDTO novaVenda = vendaService.iniciarVenda();
+
+        // Produto 1
+        vendaService.adicionarItem(
+                novaVenda.vendaId(),
+                new VendaAddItemRequestDTO(produto.getId(), 2) // R$20,00
+        );
+
+        // Produto 2
+        vendaService.adicionarItem(
+                novaVenda.vendaId(),
+                new VendaAddItemRequestDTO(produto2.getId(), 5) // R$50,00
+        );
+        // com os dois deve ter R$70,00 de valor total, mas como foi removido, só há R$20,00.
+
+        // ====== ACT ======
+        CancelarItemDTO response = vendaService.cancelarItem(
+                novaVenda.vendaId(),
+                produto2.getId()
+        );
+
+        // ====== ASSERT ======
+        assertNotNull(response);
+
+        Venda vendaAtualizada = vendaRepo.findById(novaVenda.vendaId()).get();
+
+        assertEquals(1, vendaAtualizada.getItens().size());
+        assertEquals(produto.getId(), vendaAtualizada.getItens().get(0).getProduto().getId());
+        assertEquals(0, vendaAtualizada.getValorTotal().compareTo(new BigDecimal("20.00")));
     }
 }
