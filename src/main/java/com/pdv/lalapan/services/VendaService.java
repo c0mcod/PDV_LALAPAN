@@ -126,7 +126,7 @@ public class VendaService {
     }
 
     @Transactional
-    public CancelarItemDTO cancelarItem(Long vendaId, Long itemId) {
+    public CancelarItemDTO cancelarItem(Long vendaId, Long vendaItemId) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
@@ -134,11 +134,11 @@ public class VendaService {
             throw new VendaNaoAbertaException(venda.getStatus(), vendaId);
         }
 
-        venda.removerItem(itemId);
+        venda.removerItem(vendaItemId);
         Venda vendaSalva = vendaRepo.save(venda);
         return new CancelarItemDTO(
                 vendaSalva.getId(),
-                itemId
+                vendaItemId
         );
     }
 }

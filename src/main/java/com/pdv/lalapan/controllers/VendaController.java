@@ -16,7 +16,7 @@ public class VendaController {
         this.vendaService = vendaService;
     }
 
-    // Endpoint para iniciar venda
+    // ========== CICLO PRINCIPAL ==========
     @PostMapping("/abrir")
     public ResponseEntity<VendaAberturaDTO> abrirVenda() {
         VendaAberturaDTO venda = vendaService.iniciarVenda();
@@ -32,6 +32,13 @@ public class VendaController {
     @PostMapping("/{vendaId}/finalizar")
     public ResponseEntity<VendaFinalizadaResponseDTO> finalizarVenda(@PathVariable Long vendaId, @RequestBody VendaFinalizadaRequestDTO requestDTO) {
         VendaFinalizadaResponseDTO response = vendaService.fecharVenda(vendaId, requestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    // ========== ==========
+    @PostMapping("/{vendaId}/remover-item")
+    public ResponseEntity<CancelarItemDTO> cancelarItem(@PathVariable Long vendaId, @RequestBody RemoverItemRequest request) {
+        CancelarItemDTO response = vendaService.cancelarItem(vendaId, request.itemId());
         return ResponseEntity.ok(response);
     }
 }
