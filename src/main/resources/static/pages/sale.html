@@ -122,6 +122,42 @@
     </div>
 </div>
 
+<div id="modalPagamento" class="modal">
+    <div class="modal-content">
+        <h3 class="modal-title">Finalizar Venda</h3>
+
+        <div class="modal-summary">
+            <span class="label">Total a pagar:</span>
+            <span id="valorTotalModal" class="total-value">R$ 0,00</span>
+        </div>
+
+        <div class="form-group">
+            <label for="metodoPagamento">Forma de Pagamento</label>
+            <select id="metodoPagamento" class="modal-input">
+                <option value="DINHEIRO">Dinheiro</option>
+                <option value="DEBITO">Cartão de Débito</option>
+                <option value="CREDITO">Cartão de Crédito</option>
+                <option value="PIX">Pix</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="valorRecebido">Valor Recebido</label>
+            <input type="number" id="valorRecebido" class="modal-input" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="troco-container">
+            <span>Troco:</span>
+            <span id="valorTroco" class="troco-value">R$ 0,00</span>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel-modal" onclick="document.getElementById('modalPagamento').style.display='none'">Voltar</button>
+            <button type="button" id="btnConfirmarFinalizacao" class="btn-confirm-modal">Confirmar Pagamento</button>
+        </div>
+    </div>
+</div>
+
 <script src="../js/api.js"></script>
 <script src="../js/sale.js"></script>
 

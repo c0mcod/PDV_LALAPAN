@@ -73,9 +73,11 @@ async function apiRemoverItemVenda(vendaId, itemId) {
   return response.json();
 }
 
-async function apiFinalizarVenda(vendaId) {
+async function apiFinalizarVenda(vendaId, dadosPagamento) {
   const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/finalizar`, {
-    method: "POST"
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dadosPagamento)
   });
 
   if (!response.ok) {
