@@ -2,13 +2,13 @@ package com.pdv.lalapan.entities;
 
 import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
+import com.pdv.lalapan.exceptions.*;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 public class Venda {
@@ -138,19 +138,19 @@ public class Venda {
 
     public void fechar(MetodoPagamento metodo) {
         if(this.status != StatusVenda.ABERTA) {
-            throw new RuntimeException("não é possivel fechar venda que não esteja aberta.");
+            throw new VendaNaoAbertaException(this.getStatus(), this.getId());
         }
 
         if(itens.isEmpty()) {
-            throw new RuntimeException("Não há itens na venda para finalizar");
+            throw new ListaDeItensVaziaException(this.getId());
         }
 
         if(this.getValorTotal().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Valor total da venda menor ou igual a 0.");
+            throw new ValorTotalInvalidoException(this.getValorTotal());
         }
 
         if(metodo == null) {
-            throw new RuntimeException("Metodo de pagamento não definido");
+            throw new MetodoDePagamentoInvalidoException(metodo);
         }
 
         this.setStatus(StatusVenda.FINALIZADA);
@@ -159,7 +159,7 @@ public class Venda {
 
     public void cancelar() {
         if (this.status != StatusVenda.ABERTA) {
-            throw new RuntimeException("Só é possível cancelar uma venda com status ABERTA.");
+            throw new VendaNaoAbertaException(this.getStatus(), this.getId());
         }
 
         this.setStatus(StatusVenda.CANCELADA);
@@ -168,14 +168,14 @@ public class Venda {
 
     public void removerItem(Long vendaItemId) {
         if(this.status != StatusVenda.ABERTA) {
-            throw new RuntimeException("Não é possível remover itens de uma venda que não está aberta.");
+            throw new VendaNaoAbertaException(this.getStatus(), this.getId());
         }
 
         boolean removido = this.itens.removeIf(item ->
                 item.getId().equals(vendaItemId));
 
         if(!removido) {
-            throw new RuntimeException("Item não encontrado na venda");
+            throw new ItemNaoEncontradoException(vendaItemId);
         }
 
         recalcularValorTotal();
