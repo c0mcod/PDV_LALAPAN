@@ -2,7 +2,6 @@ package com.pdv.lalapan.controllers;
 
 import com.pdv.lalapan.dto.*;
 import com.pdv.lalapan.services.VendaService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
