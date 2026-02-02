@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await carregarProdutos();
     configurarEventos();
     configurarModal();
+    configurarModalAtualizar();
 });
 
 // ===================================
@@ -31,7 +32,7 @@ async function carregarProdutos() {
 // ===================================
 function renderizarProdutos(produtos) {
     const tbody = document.querySelector('.products-table tbody');
-
+    
     if (!produtos || produtos.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhum produto encontrado</td></tr>';
         return;
@@ -80,7 +81,7 @@ function atualizarEstatisticas(produtos) {
     // Atualizar cards
     const cards = document.querySelectorAll('.stat-card');
     if (cards[0]) cards[0].querySelector('.stat-value').textContent = total;
-    if (cards[1]) cards[1].querySelector('.stat-value').textContent = `R$ ${formatarPreco(valorTotal)}`;
+    if (cards[1]) cards[1].querySelector('.stat-value').textContent = formatarValorTotal(valorTotal);
     if (cards[2]) cards[2].querySelector('.stat-value').textContent = produtosBaixos;
     if (cards[3]) cards[3].querySelector('.stat-value').textContent = produtosCriticos;
 }
@@ -104,6 +105,10 @@ function formatarPreco(preco) {
     return preco.toFixed(2).replace('.', ',');
 }
 
+function formatarValorTotal(valor) {
+    return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 // ===================================
 // BUSCA DE PRODUTOS
 // ===================================
@@ -112,7 +117,7 @@ function configurarEventos() {
     if (searchBox) {
         searchBox.addEventListener('input', (e) => {
             const termo = e.target.value.toLowerCase();
-            const produtosFiltrados = todosOsProdutos.filter(p =>
+            const produtosFiltrados = todosOsProdutos.filter(p => 
                 p.nome.toLowerCase().includes(termo) ||
                 p.codigo.toLowerCase().includes(termo) ||
                 p.categoria.toLowerCase().includes(termo)
@@ -133,15 +138,17 @@ function verDetalhes(produtoId) {
 }
 
 function editarProduto(produtoId) {
-    alert(`Funcionalidade de edição será implementada para o produto ID: ${produtoId}`);
-    // Aqui você pode abrir um modal ou redirecionar para página de edição
+    const produto = todosOsProdutos.find(p => p.id === produtoId);
+    if (produto) {
+        abrirModalAtualizar(produto);
+    }
 }
 
 async function excluirProduto(produtoId) {
     if (!confirm('Tem certeza que deseja excluir este produto?')) {
         return;
     }
-
+    
     alert('Funcionalidade de exclusão será implementada');
     // Implementar quando tiver o endpoint de DELETE no backend
     // await fetch(`${API_BASE_URL}/produto/${produtoId}`, { method: 'DELETE' });
@@ -149,7 +156,7 @@ async function excluirProduto(produtoId) {
 }
 
 // ===================================
-// FUNÇÕES DO MODAL
+// FUNÇÕES DO MODAL DE CADASTRO
 // ===================================
 function configurarModal() {
     const modal = document.getElementById('modalProduto');
@@ -210,5 +217,88 @@ async function salvarProduto() {
     } catch (error) {
         console.error('Erro ao salvar produto:', error);
         alert('Erro ao salvar produto: ' + error.message);
+    }
+}
+
+// ===================================
+// FUNÇÕES DO MODAL DE ATUALIZAÇÃO
+// ===================================
+function configurarModalAtualizar() {
+    const modalAtualizar = document.getElementById('modalAtualizarProduto');
+    const closeAtualizar = modalAtualizar.querySelector('.modal-close');
+    const cancelarAtualizar = modalAtualizar.querySelector('.btn-cancelar');
+    const formAtualizar = document.getElementById('formAtualizarProduto');
+
+    // Fechar modal
+    closeAtualizar.addEventListener('click', () => {
+        modalAtualizar.style.display = 'none';
+    });
+
+    cancelarAtualizar.addEventListener('click', () => {
+        modalAtualizar.style.display = 'none';
+    });
+
+    // Fechar ao clicar fora
+    window.addEventListener('click', (e) => {
+        if (e.target === modalAtualizar) {
+            modalAtualizar.style.display = 'none';
+        }
+    });
+
+    // Submit do formulário
+    formAtualizar.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await atualizarProduto();
+    });
+}
+
+function abrirModalAtualizar(produto) {
+    const modal = document.getElementById('modalAtualizarProduto');
+    
+    // Preenche os campos com os dados do produto
+    document.getElementById('produtoId').value = produto.id;
+    document.getElementById('nomeAtualizar').value = produto.nome;
+    document.getElementById('codigoAtualizar').value = produto.codigo;
+    document.getElementById('precoAtualizar').value = produto.preco;
+    document.getElementById('categoriaAtualizar').value = produto.categoria;
+    document.getElementById('quantidadeEstoqueAtualizar').value = produto.quantidadeEstoque;
+    document.getElementById('unidadeAtualizar').value = produto.unidade;
+    
+    // Abre o modal
+    modal.style.display = 'flex';
+}
+
+async function atualizarProduto() {
+    const produtoId = document.getElementById('produtoId').value;
+    const modal = document.getElementById('modalAtualizarProduto');
+    
+    const produtoAtualizado = {
+        nome: document.getElementById('nomeAtualizar').value,
+        preco: parseFloat(document.getElementById('precoAtualizar').value),
+        codigo: document.getElementById('codigoAtualizar').value,
+        quantidadeEstoque: parseFloat(document.getElementById('quantidadeEstoqueAtualizar').value),
+        unidade: document.getElementById('unidadeAtualizar').value,
+        categoria: document.getElementById('categoriaAtualizar').value
+    };
+
+    try {
+        const response = await fetch(`http://localhost:8090/produto/atualiza/${produtoId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(produtoAtualizado)
+        });
+
+        if (response.ok) {
+            alert('Produto atualizado com sucesso!');
+            modal.style.display = 'none';
+            await carregarProdutos();
+        } else {
+            alert('Erro ao atualizar produto!');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao conectar com o servidor!');
     }
 }

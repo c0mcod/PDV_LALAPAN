@@ -33,25 +33,25 @@
         <div class="stats-cards">
             <div class="stat-card">
                 <div class="stat-label">Total de Produtos</div>
-                <div class="stat-value">247</div>
-                <div class="stat-subtext">Em 12 categorias</div>
+                <div class="stat-value"></div>
+                <div class="stat-subtext"></div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-label">Valor em Estoque</div>
-                <div class="stat-value">R$ 89.450</div>
+                <div class="stat-value"></div>
                 <div class="stat-subtext">Custo total</div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-label">Produtos Baixos</div>
-                <div class="stat-value">18</div>
+                <div class="stat-value"></div>
                 <div class="stat-subtext">Requer atenção</div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-label">Produtos Críticos</div>
-                <div class="stat-value">5</div>
+                <div class="stat-value"></div>
                 <div class="stat-subtext">Reabastecer urgente</div>
             </div>
         </div>
@@ -166,6 +166,68 @@
             <div class="modal-footer">
                 <button type="button" class="btn-cancelar">Cancelar</button>
                 <button type="submit" class="btn-salvar">Salvar Produto</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Atualização de Produto -->
+<div id="modalAtualizarProduto" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>✏️ Atualizar Produto</h2>
+            <span class="modal-close">&times;</span>
+        </div>
+        <form id="formAtualizarProduto">
+            <!-- Campo oculto para guardar o ID do produto -->
+            <input type="hidden" id="produtoId" name="produtoId">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome do Produto *</label>
+                    <input type="text" id="nomeAtualizar" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label>Código de Barras *</label>
+                    <input type="text" id="codigoAtualizar" name="codigo" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Preço de Venda *</label>
+                    <input type="number" id="precoAtualizar" name="preco" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria *</label>
+                    <input type="text" id="categoriaAtualizar" name="categoria" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Quantidade em Estoque *</label>
+                    <input type="number" id="quantidadeEstoqueAtualizar" name="quantidadeEstoque" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Unidade *</label>
+                    <select id="unidadeAtualizar" name="unidade" required>
+                        <option value="">Selecione</option>
+                        <option value="UN">Unidade (UN)</option>
+                        <option value="KG">Quilograma (KG)</option>
+                        <option value="LT">Litro (LT)</option>
+                        <option value="CX">Caixa (CX)</option>
+                        <option value="PC">Pacote (PC)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar">Cancelar</button>
+                <button type="submit" class="btn-salvar">Atualizar Produto</button>
             </div>
         </form>
     </div>

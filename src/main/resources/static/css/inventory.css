@@ -131,6 +131,144 @@ body {
     opacity: 0.9;
 }
 
+/* ===================================
+   MODAL DE ATUALIZAÇÃO DE PRODUTO
+   =================================== */
+
+#modalAtualizarProduto .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.3s ease-out;
+}
+
+#modalAtualizarProduto .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#modalAtualizarProduto .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+#modalAtualizarProduto .modal-close {
+    font-size: 28px;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.2s;
+}
+
+#modalAtualizarProduto .modal-close:hover {
+    transform: scale(1.2);
+}
+
+#modalAtualizarProduto form {
+    padding: 30px;
+}
+
+#modalAtualizarProduto .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+#modalAtualizarProduto .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#modalAtualizarProduto .form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+#modalAtualizarProduto .form-group input,
+#modalAtualizarProduto .form-group select {
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+#modalAtualizarProduto .form-group input:focus,
+#modalAtualizarProduto .form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#modalAtualizarProduto .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+    margin-top: 10px;
+}
+
+#modalAtualizarProduto .btn-cancelar {
+    padding: 12px 30px;
+    background: #e0e0e0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+#modalAtualizarProduto .btn-cancelar:hover {
+    background: #d0d0d0;
+    transform: translateY(-2px);
+}
+
+#modalAtualizarProduto .btn-salvar {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+#modalAtualizarProduto .btn-salvar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    #modalAtualizarProduto .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    #modalAtualizarProduto .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    #modalAtualizarProduto form {
+        padding: 20px;
+    }
+}
+
 /* Cabeçalho Azul */
 .header {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
