@@ -46,6 +46,7 @@ public class Produto {
     private Unidade unidade;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "categoria", length = 50)
     private Categoria categoria;
 
     @OneToMany(mappedBy = "produto")
