@@ -6,7 +6,13 @@ import com.pdv.lalapan.enums.Unidade;
 
 import java.math.BigDecimal;
 
-public record ProdutoResponseDTO(Long id, String codigo, double quantidadeEstoque,  String nome, BigDecimal preco, Unidade unidade, Categoria categoria) {
+public record ProdutoResponseDTO(
+        Long id,
+        String codigo,
+        double quantidadeEstoque,
+        String nome, BigDecimal preco,
+        Unidade unidade,
+        Categoria categoria) {
 
     public ProdutoResponseDTO(Produto entity) {
         this(entity.getId(), entity.getCodigo(), entity.getQuantidadeEstoque(), entity.getNome(), entity.getPreco(), entity.getUnidade(), entity.getCategoria());
