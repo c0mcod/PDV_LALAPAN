@@ -1,4 +1,6 @@
 package com.pdv.lalapan.handler;
 
-public record DetalhesEstoque(String nomeProduto, Integer disponivel, Double solicitado) {
+import java.math.BigDecimal;
+
+public record DetalhesEstoque(String nomeProduto, BigDecimal disponivel, Double solicitado) {
 }

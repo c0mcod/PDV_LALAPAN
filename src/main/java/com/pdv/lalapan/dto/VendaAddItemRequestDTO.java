@@ -1,5 +1,7 @@
 package com.pdv.lalapan.dto;
 
-public record VendaAddItemRequestDTO(Long idProduto, int quantidade) {
+import java.math.BigDecimal;
+
+public record VendaAddItemRequestDTO(Long idProduto, BigDecimal quantidade) {
 
 }

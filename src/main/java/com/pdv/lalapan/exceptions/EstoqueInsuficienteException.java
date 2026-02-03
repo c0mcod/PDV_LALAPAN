@@ -1,11 +1,13 @@
 package com.pdv.lalapan.exceptions;
 
+import java.math.BigDecimal;
+
 public class EstoqueInsuficienteException extends RuntimeException{
     private String nomeProduto;
-    private Integer quantidade;
+    private BigDecimal quantidade;
     private Double quantidadeEstoque;
 
-    public EstoqueInsuficienteException(String nomeProduto, Integer quantidade, Double quantidadeEstoque) {
+    public EstoqueInsuficienteException(String nomeProduto, BigDecimal quantidade, Double quantidadeEstoque) {
         super(String.format(
                 "Estoque insuficiente para o produto '%s'. Solicitado: %d, Disponível: %.2f",
                 nomeProduto, quantidade, quantidadeEstoque
@@ -19,7 +21,7 @@ public class EstoqueInsuficienteException extends RuntimeException{
         return nomeProduto;
     }
 
-    public Integer getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
