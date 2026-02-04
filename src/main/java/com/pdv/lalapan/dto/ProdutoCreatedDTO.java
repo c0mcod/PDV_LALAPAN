@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 public record ProdutoCreatedDTO(
         String nome,
         String codigo,
-        double estoqueMinimo,
+        BigDecimal estoqueMinimo,
         BigDecimal preco,
         Unidade unidade,
         Categoria categoria,
-        double quantidadeEstoque
+        BigDecimal quantidadeEstoque
 ) {
 
 }

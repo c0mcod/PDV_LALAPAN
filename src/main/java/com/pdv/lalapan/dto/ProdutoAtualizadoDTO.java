@@ -10,7 +10,7 @@ public record ProdutoAtualizadoDTO(
         String nome,
         BigDecimal preco,
         String codigo,
-        double quantidadeEstoque,
+        BigDecimal quantidadeEstoque,
         Unidade unidade,
         Categoria categoria
 ) {

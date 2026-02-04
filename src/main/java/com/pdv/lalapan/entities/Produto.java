@@ -39,8 +39,8 @@ public class Produto {
     private String nome;
     private BigDecimal preco = BigDecimal.ZERO;
     private String codigo;
-    private double estoqueMinimo;
-    private double quantidadeEstoque;
+    private BigDecimal estoqueMinimo;
+    private BigDecimal quantidadeEstoque;
 
     @Column(name = "ativo")
     private Boolean ativo = true;
@@ -83,11 +83,11 @@ public class Produto {
         this.preco = preco;
     }
 
-    public double getQuantidadeEstoque() {
+    public BigDecimal getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
 
-    public void setQuantidadeEstoque(double quantidadeEstoque) {
+    public void setQuantidadeEstoque(BigDecimal quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
@@ -123,7 +123,7 @@ public class Produto {
         this.codigo = codigo;
     }
 
-    public double getEstoqueMinimo() {
+    public BigDecimal getEstoqueMinimo() {
         return estoqueMinimo;
     }
 
@@ -135,18 +135,18 @@ public class Produto {
         this.ativo = ativo;
     }
 
-    public void setEstoqueMinimo(double estoqueMinimo) {
+    public void setEstoqueMinimo(BigDecimal estoqueMinimo) {
         this.estoqueMinimo = estoqueMinimo;
     }
 
     public boolean isEstoqueBaixo() {
-        return this.quantidadeEstoque <= this.estoqueMinimo;
+        return this.quantidadeEstoque.compareTo(this.estoqueMinimo) <= 0;
     }
 
-    public void adicionarEstoque(double quantidade) {
-        if(quantidade <= 0) {
+    public void adicionarEstoque(BigDecimal quantidade) {
+        if(quantidade.compareTo(BigDecimal.ZERO) <= 0) {
             throw new QuantidadeInvalidaException(quantidade);
         }
-        this.quantidadeEstoque += quantidade;
+        this.quantidadeEstoque = this.quantidadeEstoque.add(quantidade);
     }
 }

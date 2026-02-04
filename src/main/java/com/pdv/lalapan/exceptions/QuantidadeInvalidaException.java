@@ -1,14 +1,16 @@
 package com.pdv.lalapan.exceptions;
 
-public class QuantidadeInvalidaException extends RuntimeException {
-    public double quantidade;
+import java.math.BigDecimal;
 
-    public QuantidadeInvalidaException(double quantidade) {
+public class QuantidadeInvalidaException extends RuntimeException {
+    public BigDecimal quantidade;
+
+    public QuantidadeInvalidaException(BigDecimal quantidade) {
         super(String.format("Quantidade %.2f não é válida.", quantidade));
         this.quantidade = quantidade;
     }
 
-    public double getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 }
