@@ -1,4 +1,6 @@
 package com.pdv.lalapan.dto;
 
-public record EntradaProdutoRequestDTO(String observacao, double quantidade) {
+import java.math.BigDecimal;
+
+public record EntradaProdutoRequestDTO(BigDecimal quantidade) {
 }
