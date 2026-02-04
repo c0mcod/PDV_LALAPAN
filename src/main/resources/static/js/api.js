@@ -12,6 +12,21 @@ async function apiGetProducts() {
   return response.json();
 }
 
+async function apiRegistrarEntrada(produtoId, quantidade) {
+  const response = await fetch(`${API_BASE_URL}/produto/${produtoId}/adicionar-estoque`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ quantidade })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Erro ao registrar entrada");
+  }
+
+  return response.json();
+}
+
 async function apiDeleteProducts(id) {
   const response = await fetch(`${API_BASE_URL}/produto/${id}`, {
     method: "DELETE"

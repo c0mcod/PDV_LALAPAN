@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     configurarEventos();
     configurarModal();
     configurarModalAtualizar();
+    configurarModalEntrada();
 });
 
 // ===================================
@@ -60,7 +61,7 @@ function renderizarProdutos(produtos) {
             </td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-action btn-detalhes" onclick="verDetalhes(${produto.id})">Entrada</button>
+                    <button class="btn-action btn-entrada" onclick="abrirModalEntrada(${produto.id})">Entrada</button>
                     <button class="btn-action btn-editar" onclick="editarProduto(${produto.id})">Editar</button>
                     <button class="btn-action btn-excluir" onclick="excluirProduto(${produto.id})">Excluir</button>
                 </div>
@@ -159,8 +160,8 @@ async function excluirProduto(produtoId) {
 function configurarModal() {
     const modal = document.getElementById('modalProduto');
     const btnNovo = document.getElementById('btnNovoProduto');
-    const btnFechar = document.querySelector('.modal-close');
-    const btnCancelar = document.querySelector('.btn-cancelar');
+    const btnFechar = modal.querySelector('.modal-close');
+    const btnCancelar = modal.querySelector('.btn-cancelar');
     const form = document.getElementById('formProduto');
 
     // Abrir modal
@@ -298,5 +299,79 @@ async function atualizarProduto() {
     } catch (error) {
         console.error('Erro:', error);
         alert('Erro ao conectar com o servidor!');
+    }
+}
+
+// ===================================
+// FUNÇÕES DO MODAL DE ENTRADA
+// ===================================
+function configurarModalEntrada() {
+    const modal = document.getElementById('modalEntradaEstoque');
+    const btnFechar = modal.querySelector('.modal-close');
+    const btnCancelar = modal.querySelector('.btn-cancelar');
+    const form = document.getElementById('formEntradaEstoque');
+
+    // Fechar modal
+    btnFechar.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    btnCancelar.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Fechar ao clicar fora
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Submit do formulário
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await registrarEntrada();
+    });
+}
+
+function abrirModalEntrada(produtoId) {
+    const produto = todosOsProdutos.find(p => p.id === produtoId);
+    
+    if (!produto) {
+        alert('Produto não encontrado!');
+        return;
+    }
+
+    const modal = document.getElementById('modalEntradaEstoque');
+    
+    // Preenche os campos
+    document.getElementById('produtoIdEntrada').value = produto.id;
+    document.getElementById('produtoNomeEntrada').value = produto.nome;
+    document.getElementById('estoqueAtualEntrada').value = `${produto.quantidadeEstoque} ${produto.unidade}`;
+    document.getElementById('quantidadeEntrada').value = '';
+    
+    // Abre o modal
+    modal.style.display = 'flex';
+}
+
+async function registrarEntrada() {
+    const produtoId = document.getElementById('produtoIdEntrada').value;
+    const quantidade = parseFloat(document.getElementById('quantidadeEntrada').value);
+    const modal = document.getElementById('modalEntradaEstoque');
+
+    // Validação básica
+    if (quantidade <= 0) {
+        alert('A quantidade deve ser maior que zero!');
+        return;
+    }
+
+    try {
+        await apiRegistrarEntrada(produtoId, quantidade);
+        alert('Entrada registrada com sucesso!');
+        modal.style.display = 'none';
+        await carregarProdutos(); // Recarrega a tabela
+    } catch (error) {
+        console.error('Erro ao registrar entrada:', error);
+        alert('Erro ao registrar entrada: ' + error.message);
     }
 }

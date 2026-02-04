@@ -111,6 +111,47 @@
         </div>
     </div>
 
+    <!-- Modal de Entrada de Estoque -->
+    <div id="modalEntradaEstoque" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📦 Registrar Entrada de Estoque</h2>
+                <span class="modal-close">&times;</span>
+            </div>
+
+            <form id="formEntradaEstoque">
+                <input type="hidden" id="produtoIdEntrada">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Produto</label>
+                        <input type="text" id="produtoNomeEntrada" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Estoque Atual</label>
+                        <input type="text" id="estoqueAtualEntrada" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quantidade a Adicionar *</label>
+                        <input type="number" id="quantidadeEntrada" step="0.01" min="0.01" required
+                            placeholder="Ex: 50">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-primary">Registrar Entrada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Cadastro de Produto -->
     <div id="modalProduto" class="modal">
         <div class="modal-content">
