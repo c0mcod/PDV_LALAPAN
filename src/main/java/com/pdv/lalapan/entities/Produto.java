@@ -42,6 +42,9 @@ public class Produto {
     private double estoqueMinimo;
     private double quantidadeEstoque;
 
+    @Column(name = "ativo")
+    private Boolean ativo = true;
+
     @Enumerated(EnumType.STRING)
     private Unidade unidade;
 
@@ -122,6 +125,14 @@ public class Produto {
 
     public double getEstoqueMinimo() {
         return estoqueMinimo;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 
     public void setEstoqueMinimo(double estoqueMinimo) {

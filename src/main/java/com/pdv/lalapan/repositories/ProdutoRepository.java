@@ -10,4 +10,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("SELECT p FROM Produto p WHERE p.quantidadeEstoque <= p.estoqueMinimo AND p.estoqueMinimo IS NOT NULL")
     List<Produto> findProdutosComEstoqueBaixo();
+
+    List<Produto> findByAtivoTrue();
 }

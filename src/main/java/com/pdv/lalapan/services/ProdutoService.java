@@ -56,14 +56,18 @@ public class ProdutoService {
     }
 
     public void delete(Long id) {
-        if (!prodRepo.existsById(id)) {
-            throw new ProdutoInexistenteException(id);
-        }
-        prodRepo.deleteById(id);
+        Produto produto = prodRepo.findById(id)
+                        .orElseThrow(() -> new ProdutoInexistenteException(id));
+        produto.setAtivo(false);
+        prodRepo.save(produto);
+    }
+
+    public List<Produto> findAll() {
+        return prodRepo.findByAtivoTrue();
     }
 
     public List<ProdutoResponseDTO> buscarTodosProdutos() {
-        return prodRepo.findAll()
+        return prodRepo.findByAtivoTrue()
                 .stream()
                 .map(ProdutoResponseDTO :: new)
                 .toList();
