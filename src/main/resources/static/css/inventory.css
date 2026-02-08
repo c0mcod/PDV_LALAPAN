@@ -9,6 +9,7 @@ body {
     background-color: #f5f5f5;
     height: 100vh;
     overflow: hidden;
+    min-width: 1024px;
 }
 
 /* ===================================
@@ -23,69 +24,63 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    overflow-y: auto; /* Permite rolar a tela se o modal for muito alto */
+    padding: 20px; /* Evita que o modal toque as bordas da tela em mobile */
 }
 
 .modal-content {
     background: white;
-    margin: 5% auto;
+    margin: 2% auto;
     border-radius: 12px;
-    width: 90%;
-    max-width: 700px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 650px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     animation: slideDown 0.3s ease-out;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Garante que nada saia das bordas arredondadas */
 }
 
-/* Animação de entrada do modal */
 @keyframes slideDown {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
+/* Cabeçalho do Modal */
 .modal-header {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     color: white;
     padding: 20px 30px;
-    border-radius: 12px 12px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
-.modal-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-}
+.modal-header h2 { margin: 0; font-size: 1.25rem; font-weight: 600; }
 
 .modal-close {
-    font-size: 28px;
+    font-size: 24px;
     cursor: pointer;
     color: white;
-    transition: transform 0.2s;
-    line-height: 1;
+    transition: opacity 0.2s;
+    opacity: 0.8;
+    background: transparent;
+    border: none;
 }
+.modal-close:hover { opacity: 1; transform: scale(1.1); }
 
-.modal-close:hover {
-    transform: scale(1.2);
-}
-
-/* ===================================
-   FORMULÃRIOS DOS MODAIS
-   =================================== */
-
+/* Corpo do Modal (Formulário) */
 .modal form {
-    padding: 30px;
+    padding: 30px; /* ESPAÇAMENTO GERAL DOS CAMPOS PARA A BORDA */
+    overflow-y: auto;
+    max-height: calc(100vh - 150px); /* Evita que o form cresça demais */
 }
 
+/* Grid de Inputs */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -93,37 +88,30 @@ body {
     margin-bottom: 20px;
 }
 
-/* Para uma coluna Ãºnica */
-.form-row.single-column {
-    grid-template-columns: 1fr;
-}
+.form-row.single-column { grid-template-columns: 1fr; }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
+.form-group { display: flex; flex-direction: column; }
 
 .form-group label {
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
     color: #333;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .form-group input,
 .form-group select {
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s;
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    width: 100%; /* Garante que não estoure */
+    transition: border-color 0.2s;
 }
 
-/* Campos readonly com estilo diferenciado */
 .form-group input[readonly] {
-    background-color: #f8f9fa;
+    background-color: #e9ecef;
     color: #6c757d;
-    cursor: not-allowed;
 }
 
 .form-group input:focus,
@@ -133,190 +121,108 @@ body {
     box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
 }
 
-.modal-footer,
-.modal-actions {
+/* Rodapé do Modal (Botões) */
+.modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 15px;
-    padding-top: 20px;
-    border-top: 2px solid #f0f0f0;
+    padding-top: 25px; /* Espaço entre inputs e botões */
+    border-top: 1px solid #e9ecef;
     margin-top: 10px;
 }
 
-/* ===================================
-   BOTÃ•ES DOS MODAIS
-   =================================== */
-
-.btn-cancelar,
-.btn-salvar,
-.btn-primary {
-    padding: 12px 30px;
+/* Botões */
+.btn-cancelar, .btn-salvar, .btn-primary, .btn-excluir {
+    padding: 10px 25px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
 }
 
-.btn-cancelar {
-    background: #e0e0e0;
-    color: #333;
-}
+.btn-cancelar { background: #e9ecef; color: #495057; }
+.btn-cancelar:hover { background: #dee2e6; }
 
-.btn-cancelar:hover {
-    background: #d0d0d0;
-    transform: translateY(-2px);
-}
+.btn-salvar, .btn-primary { background: #2a5298; color: white; }
+.btn-salvar:hover, .btn-primary:hover { background: #1e3c72; transform: translateY(-1px); }
 
-.btn-salvar,
-.btn-primary {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-}
+/* --- Ajustes Específicos --- */
 
-.btn-salvar:hover,
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(42, 82, 152, 0.4);
-}
-
-/* ===================================
-   ESTILOS ESPECÃFICOS DO MODAL DE ENTRADA
-   =================================== */
-
-#modalEntradaEstoque .modal-content {
-    max-width: 500px;
-}
-
-#modalEntradaEstoque .form-row {
-    grid-template-columns: 1fr;
-}
-
-/* Destaque visual para o campo de quantidade */
+/* Modal Entrada */
+#modalEntradaEstoque .modal-content { max-width: 500px; }
+#modalEntradaEstoque .form-row { grid-template-columns: 1fr; }
 #modalEntradaEstoque #quantidadeEntrada {
     border-color: #2a5298;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.1rem;
+    padding: 15px;
 }
 
-#modalEntradaEstoque #quantidadeEntrada:focus {
-    border-color: #1e3c72;
-    box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.15);
-}
-
-/* ===================================
-   RESPONSIVO
-   =================================== */
-
-@media (max-width: 768px) {
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .modal-content {
-        width: 95%;
-        margin: 20px auto;
-    }
-
-    .modal form {
-        padding: 20px;
-    }
-
-    .modal-header {
-        padding: 15px 20px;
-    }
-
-    .modal-header h2 {
-        font-size: 1.2rem;
-    }
-}
-
-/* ===================================
-   MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
-   =================================== */
-
+/* Modal Exclusão (Correção de Bug Visual) */
 #modal-confirmar-exclusao {
-    display: none;
-    position: fixed;
-    z-index: 1001;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    align-items: center;
-    justify-content: center;
+    display: none; /* Controlado pelo JS */
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
 }
 
 #modal-confirmar-exclusao .modal-content {
-    max-width: 450px;
+    max-width: 420px;
     width: 90%;
     margin: 0;
+    text-align: center;
+    padding: 30px; /* Padding direto no content pois não tem form */
 }
 
 #modal-confirmar-exclusao h3 {
-    font-size: 1.3rem;
     color: #dc3545;
-    margin-bottom: 15px;
-    padding: 20px 30px 0;
+    margin: 0 0 15px 0;
+    font-size: 1.4rem;
 }
 
 #modal-confirmar-exclusao p {
-    color: #495057;
+    color: #6c757d;
+    margin-bottom: 25px;
     font-size: 1rem;
-    padding: 0 30px 20px;
-    margin: 0;
 }
 
 #modal-confirmar-exclusao .modal-footer {
-    padding: 20px 30px;
-    margin: 0;
+    justify-content: center; /* Centraliza botões */
+    border-top: none; /* Remove linha pois é um modal simples */
+    padding-top: 0;
+    margin-top: 0;
 }
 
-#modal-confirmar-exclusao #btn-confirmar-exclusao {
-    background-color: #dc3545;
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: all 0.3s;
+#btn-confirmar-exclusao { background-color: #dc3545; color: white; }
+#btn-confirmar-exclusao:hover { background-color: #c82333; box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3); }
+
+/* Responsividade Mobile dos Modais */
+@media (max-width: 768px) {
+    .modal form { padding: 20px; }
+    .form-row { grid-template-columns: 1fr; gap: 15px; }
+    .modal-footer { flex-direction: column-reverse; } /* Botão de salvar fica em cima no mobile */
+    .btn-cancelar, .btn-salvar, .btn-primary { width: 100%; text-align: center; padding: 12px; }
 }
 
-#modal-confirmar-exclusao #btn-confirmar-exclusao:hover {
-    background-color: #c82333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
-}
 
-/* Cabeçalho Azul */
+/* --- Layout Principal --- */
+
+/* Cabeçalho */
 .header {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     color: white;
-    padding: 12px 30px;
+    padding: 0 30px;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
+.header-left { display: flex; align-items: center; gap: 15px; }
+.logo { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
 .page-title {
     font-size: 18px;
     font-weight: 500;
@@ -324,20 +230,13 @@ body {
     border-left: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 14px;
-}
-
+.header-right { display: flex; align-items: center; gap: 20px; font-size: 14px; }
 .user-info {
     background-color: rgba(255, 255, 255, 0.2);
     padding: 6px 12px;
     border-radius: 4px;
     font-weight: 600;
 }
-
 .close-btn {
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
@@ -347,304 +246,201 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+.close-btn:hover { background-color: rgba(255, 255, 255, 0.3); }
 
-.close-btn:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Container Principal */
+/* Grid Principal */
 .main-container {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    height: calc(100vh - 54px);
+    grid-template-columns: 300px 1fr;
+    height: calc(100vh - 60px);
+    transition: grid-template-columns 0.3s ease;
 }
 
-/* Banner Lateral */
+/* Sidebar */
 .left-banner {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     display: flex;
     flex-direction: column;
-    padding: 30px 20px;
+    padding: 25px 20px;
+    overflow-y: auto;
 }
 
-.banner-content {
-    text-align: center;
-    color: white;
-    margin-bottom: 40px;
-}
+.banner-content { text-align: center; color: white; margin-bottom: 30px; flex-shrink: 0; }
+.banner-logo { font-size: 42px; margin-bottom: 10px; }
+.banner-title { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+.banner-subtitle { font-size: 14px; opacity: 0.9; }
 
-.banner-logo {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-.banner-title {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.banner-subtitle {
-    font-size: 16px;
-    opacity: 0.9;
-}
-
-/* Cards de Estatísticas */
-.stats-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+/* Cards Estatísticas */
+.stats-cards { display: flex; flex-direction: column; gap: 15px; }
 
 .stat-card {
     background-color: rgba(255, 255, 255, 0.15);
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
     backdrop-filter: blur(10px);
 }
+.stat-label { font-size: 11px; opacity: 0.8; margin-bottom: 5px; color: white; text-transform: uppercase; }
+.stat-value { font-size: 24px; font-weight: 700; color: white; }
+.stat-subtext { font-size: 11px; opacity: 0.7; margin-top: 5px; color: white; }
 
-.stat-label {
-    font-size: 12px;
-    opacity: 0.8;
-    margin-bottom: 5px;
-}
-
-.stat-value {
-    font-size: 28px;
-    font-weight: 700;
-}
-
-.stat-subtext {
-    font-size: 11px;
-    opacity: 0.7;
-    margin-top: 5px;
-}
-
-/* Painel Principal */
+/* Painel Direito */
 .right-panel {
-    background-color: white;
+    background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
-/* Barra de Ferramentas */
+/* Toolbar */
 .toolbar {
     background-color: #fff;
     padding: 20px 30px;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
 }
 
-.search-section {
-    flex: 1;
-    max-width: 500px;
-}
-
+.search-section { flex: 1; max-width: 500px; }
 .search-box {
     width: 100%;
     padding: 10px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #dee2e6;
     border-radius: 6px;
     font-size: 14px;
 }
+.search-box:focus { outline: none; border-color: #2a5298; }
 
-.search-box:focus {
-    outline: none;
-    border-color: #2a5298;
-}
-
-.toolbar-actions {
-    display: flex;
-    gap: 10px;
-}
-
+.toolbar-actions { display: flex; gap: 10px; }
 .btn-toolbar {
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    white-space: nowrap;
 }
+.btn-novo { background-color: #28a745; color: white; }
+.btn-novo:hover { background-color: #218838; }
+.btn-exportar { background-color: #17a2b8; color: white; }
+.btn-exportar:hover { background-color: #138496; }
 
-.btn-novo {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-novo:hover {
-    background-color: #218838;
-}
-
-.btn-exportar {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.btn-exportar:hover {
-    background-color: #138496;
-}
-
-.btn-filtro {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-filtro:hover {
-    background-color: #5a6268;
-}
-
-/* Tabela de Produtos */
+/* Container da Tabela */
 .table-container {
     flex: 1;
-    overflow-y: auto;
+    overflow: auto; /* Scroll principal da tabela */
     padding: 20px 30px;
 }
 
 .products-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate; /* Necessário para sticky header funcionar bem */
+    border-spacing: 0;
     background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .products-table thead {
-    background-color: #f8f9fa;
     position: sticky;
     top: 0;
     z-index: 10;
+    background-color: #f8f9fa;
 }
 
 .products-table th {
     padding: 15px;
     text-align: left;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #495057;
     border-bottom: 2px solid #dee2e6;
     text-transform: uppercase;
+    background-color: #f8f9fa; /* Garante que o fundo não seja transparente ao scrollar */
+    white-space: nowrap;
 }
 
 .products-table td {
-    padding: 15px;
+    padding: 12px 15px;
     border-bottom: 1px solid #e9ecef;
     font-size: 14px;
-}
-
-.products-table tbody tr:hover {
-    background-color: #f8f9fa;
-    cursor: pointer;
-}
-
-.product-code {
-    color: #6c757d;
-    font-size: 12px;
-}
-
-.product-name {
-    font-weight: 600;
     color: #212529;
+    vertical-align: middle;
 }
+
+.products-table tbody tr:last-child td { border-bottom: none; }
+.products-table tbody tr:hover { background-color: #f1f3f5; }
+
+/* Células Específicas */
+.product-name { font-weight: 600; color: #343a40; }
+.product-code { font-size: 12px; color: #868e96; margin-top: 2px; }
 
 .category-badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 4px 8px;
     background-color: #e7f3ff;
-    color: #2a5298;
+    color: #1864ab;
     border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.stock-status {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.stock-ok {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.stock-baixo {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.stock-critico {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.price-value {
+    font-size: 11px;
     font-weight: 700;
-    color: #28a745;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
-.action-buttons {
-    display: flex;
-    gap: 5px;
-}
+.price-value { font-weight: 700; color: #28a745; white-space: nowrap; }
 
+/* Status Estoque */
+.stock-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.stock-ok { background-color: #d3f9d8; color: #2b8a3e; }
+.stock-baixo { background-color: #fff3bf; color: #f08c00; }
+.stock-critico { background-color: #ffe3e3; color: #c92a2a; }
+
+/* Ações */
+.action-buttons { display: flex; gap: 6px; }
 .btn-action {
-    padding: 6px 12px;
+    padding: 6px 10px;
     border: none;
     border-radius: 4px;
     font-size: 12px;
     cursor: pointer;
-    transition: all 0.3s;
+    font-weight: 600;
 }
-
-.btn-editar {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.btn-editar:hover {
-    background-color: #e0a800;
-}
-
-.btn-excluir {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-excluir:hover {
-    background-color: #c82333;
-}
-
-.btn-entrada {
-    background-color: #2a5298;
-    color: white;
-}
-
-.btn-entrada:hover {
-    background-color: #1e3c72;
-}
+.btn-editar { background-color: #ffd43b; color: #212529; }
+.btn-editar:hover { background-color: #fcc419; }
+.btn-excluir { background-color: #ffc9c9; color: #e03131; }
+.btn-excluir:hover { background-color: #ff8787; color: white; }
+.btn-entrada { background-color: #e7f5ff; color: #1971c2; }
+.btn-entrada:hover { background-color: #d0ebff; }
 
 /* Rodapé */
 .footer {
-    background-color: #f8f9fa;
+    background-color: white;
     padding: 15px 30px;
-    border-top: 2px solid #e0e0e0;
+    border-top: 1px solid #dee2e6;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 13px;
     color: #6c757d;
+    flex-shrink: 0;
 }
 
-.pagination {
-    display: flex;
-    gap: 5px;
-}
-
+.pagination { display: flex; gap: 5px; }
 .page-btn {
     padding: 6px 12px;
     border: 1px solid #dee2e6;
@@ -652,32 +448,42 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-size: 13px;
+    color: #495057;
+}
+.page-btn:hover { background-color: #f8f9fa; }
+.page-btn.active { background-color: #2a5298; color: white; border-color: #2a5298; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+
+/* --- Media Queries Desktop Responsivo --- */
+
+@media (max-width: 1366px) {
+    .main-container { grid-template-columns: 240px 1fr; }
+    .form-row { gap: 15px; } /* Modal mais compacto */
 }
 
-.page-btn:hover {
-    background-color: #e9ecef;
-}
+@media (max-width: 1100px) {
+    .main-container { grid-template-columns: 220px 1fr; }
+    
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .search-section { max-width: 100%; }
+    
+    .toolbar-actions {
+        justify-content: flex-end;
+    }
 
-.page-btn.active {
-    background-color: #2a5298;
-    color: white;
-    border-color: #2a5298;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #999;
+    /* Ajuste da tabela para não quebrar */
+    .products-table th, 
+    .products-table td {
+        padding: 10px;
+    }
 }
