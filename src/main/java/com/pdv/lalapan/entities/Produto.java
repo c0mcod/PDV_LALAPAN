@@ -2,6 +2,7 @@ package com.pdv.lalapan.entities;
 
 import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.Unidade;
+import com.pdv.lalapan.exceptions.CodigoDeBarrasInvalidoException;
 import com.pdv.lalapan.exceptions.QuantidadeInvalidaException;
 import jakarta.persistence.*;
 
@@ -120,7 +121,7 @@ public class Produto {
     }
 
     public void setCodigo(String codigo) {
-        this.codigo = codigo;
+        this.codigo = formatarEAN13(codigo);
     }
 
     public BigDecimal getEstoqueMinimo() {
@@ -148,5 +149,28 @@ public class Produto {
             throw new QuantidadeInvalidaException(quantidade);
         }
         this.quantidadeEstoque = this.quantidadeEstoque.add(quantidade);
+    }
+
+    private String formatarEAN13(String codigo) {
+        codigo = codigo.replaceAll("\\D", "");
+
+        if (codigo.length() == 13) {
+            return codigo;
+        }
+
+        if (codigo.length() > 13) {
+            throw new CodigoDeBarrasInvalidoException(codigo);
+        }
+
+        codigo = String.format("%012d", Long.parseLong(codigo));
+
+        int soma = 0;
+        for (int i = 0; i < 12; i++) {
+            int digito = Character.getNumericValue(codigo.charAt(i));
+            soma += (i % 2 == 0) ? digito : digito * 3;
+        }
+        int digitoVerificador = (10 - (soma % 10)) % 10;
+
+        return codigo + digitoVerificador;
     }
 }
