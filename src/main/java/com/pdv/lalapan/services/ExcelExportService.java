@@ -19,22 +19,26 @@ public class ExcelExportService {
         Sheet sheet = workbook.createSheet("Produtos");
 
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(0).setCellValue("CODIGO");
         headerRow.createCell(1).setCellValue("NOME");
         headerRow.createCell(2).setCellValue("CATEGORIA");
         headerRow.createCell(3).setCellValue("QUANTIDADE");
-        headerRow.createCell(4).setCellValue("VALOR");
-        headerRow.createCell(5).setCellValue("STATUS");
+        headerRow.createCell(4).setCellValue("UNIDADE");
+        headerRow.createCell(5).setCellValue("QTD. MIN");
+        headerRow.createCell(6).setCellValue("VALOR");
+        headerRow.createCell(7).setCellValue("STATUS");
 
         int rowNum = 1;
         for(Produto produto : produtos) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(produto.getId());
+            row.createCell(0).setCellValue(produto.getCodigo());
             row.createCell(1).setCellValue(produto.getNome());
             row.createCell(2).setCellValue(produto.getCategoria().toString());
             row.createCell(3).setCellValue(produto.getQuantidadeEstoque().doubleValue());
-            row.createCell(4).setCellValue(produto.getPreco().doubleValue());
-            row.createCell(5).setCellValue(produto.getAtivo() ? "Ativo" : "Inativo");
+            row.createCell(4).setCellValue(produto.getUnidade().toString());
+            row.createCell(5).setCellValue(produto.getEstoqueMinimo().doubleValue());
+            row.createCell(6).setCellValue(produto.getPreco().doubleValue());
+            row.createCell(7).setCellValue(produto.getAtivo() ? "Ativo" : "Inativo");
         }
 
         for(int i = 0; i < 6; i++) {
