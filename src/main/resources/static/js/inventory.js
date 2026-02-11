@@ -33,7 +33,7 @@ async function carregarProdutos() {
 // ===================================
 function renderizarProdutos(produtos) {
     const tbody = document.querySelector('.products-table tbody');
-    
+
     if (!produtos || produtos.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhum produto encontrado</td></tr>';
         return;
@@ -52,8 +52,8 @@ function renderizarProdutos(produtos) {
             </td>
             <td>${produto.quantidadeEstoque} ${produto.unidade}</td>
             <td>
-                <span class="stock-status ${getStatusClass(produto.quantidadeEstoque)}">
-                    ${getStatusTexto(produto.quantidadeEstoque)}
+                <span class="stock-status ${getStatusClass(produto.quantidadeEstoque, produto.estoqueMinimo)}">
+                     ${getStatusTexto(produto.quantidadeEstoque, produto.estoqueMinimo)}
                 </span>
             </td>
             <td>
@@ -76,8 +76,8 @@ function renderizarProdutos(produtos) {
 function atualizarEstatisticas(produtos) {
     const total = produtos.length;
     const valorTotal = produtos.reduce((soma, p) => soma + (p.preco * p.quantidadeEstoque), 0);
-    const produtosBaixos = produtos.filter(p => p.quantidadeEstoque > 5 && p.quantidadeEstoque <= 15).length;
-    const produtosCriticos = produtos.filter(p => p.quantidadeEstoque <= 5).length;
+    const produtosBaixos = produtos.filter(p => p.quantidadeEstoque <= p.estoqueMinimo && p.quantidadeEstoque > p.estoqueMinimo * 0.5).length;
+    const produtosCriticos = produtos.filter(p => p.quantidadeEstoque <= p.estoqueMinimo * 0.5).length;
 
     // Atualizar cards
     const cards = document.querySelectorAll('.stat-card');
@@ -90,15 +90,20 @@ function atualizarEstatisticas(produtos) {
 // ===================================
 // FUNÇÕES AUXILIARES
 // ===================================
-function getStatusClass(quantidade) {
-    if (quantidade <= 5) return 'stock-critico';
-    if (quantidade <= 15) return 'stock-baixo';
+function getStatusClass(quantidade, estoqueMinimo) {
+    // Crítico: 50% ou menos do mínimo
+    if (quantidade <= estoqueMinimo * 0.5) return 'stock-critico';
+    
+    // Baixo: no mínimo ou menos
+    if (quantidade <= estoqueMinimo) return 'stock-baixo';
+    
+    // OK: acima do mínimo
     return 'stock-ok';
 }
 
-function getStatusTexto(quantidade) {
-    if (quantidade <= 5) return 'Crítico';
-    if (quantidade <= 15) return 'Estoque Baixo';
+function getStatusTexto(quantidade, estoqueMinimo) {
+    if (quantidade <= estoqueMinimo * 0.5) return 'Crítico';
+    if (quantidade <= estoqueMinimo) return 'Estoque Baixo';
     return 'Em Estoque';
 }
 
@@ -118,7 +123,7 @@ function configurarEventos() {
     if (searchBox) {
         searchBox.addEventListener('input', (e) => {
             const termo = e.target.value.toLowerCase();
-            const produtosFiltrados = todosOsProdutos.filter(p => 
+            const produtosFiltrados = todosOsProdutos.filter(p =>
                 p.nome.toLowerCase().includes(termo) ||
                 p.codigo.toLowerCase().includes(termo) ||
                 p.categoria.toLowerCase().includes(termo)
@@ -249,7 +254,7 @@ function configurarModalAtualizar() {
 
 function abrirModalAtualizar(produto) {
     const modal = document.getElementById('modalAtualizarProduto');
-    
+
     // Preenche os campos com os dados do produto
     document.getElementById('produtoId').value = produto.id;
     document.getElementById('nomeAtualizar').value = produto.nome;
@@ -258,7 +263,7 @@ function abrirModalAtualizar(produto) {
     document.getElementById('categoriaAtualizar').value = produto.categoria;
     document.getElementById('quantidadeEstoqueAtualizar').value = produto.quantidadeEstoque;
     document.getElementById('unidadeAtualizar').value = produto.unidade;
-    
+
     // Abre o modal
     modal.style.display = 'flex';
 }
@@ -266,7 +271,7 @@ function abrirModalAtualizar(produto) {
 async function atualizarProduto() {
     const produtoId = document.getElementById('produtoId').value;
     const modal = document.getElementById('modalAtualizarProduto');
-    
+
     const produtoAtualizado = {
         nome: document.getElementById('nomeAtualizar').value,
         preco: parseFloat(document.getElementById('precoAtualizar').value),
@@ -332,20 +337,20 @@ function configurarModalEntrada() {
 
 function abrirModalEntrada(produtoId) {
     const produto = todosOsProdutos.find(p => p.id === produtoId);
-    
+
     if (!produto) {
         alert('Produto não encontrado!');
         return;
     }
 
     const modal = document.getElementById('modalEntradaEstoque');
-    
+
     // Preenche os campos
     document.getElementById('produtoIdEntrada').value = produto.id;
     document.getElementById('produtoNomeEntrada').value = produto.nome;
     document.getElementById('estoqueAtualEntrada').value = `${produto.quantidadeEstoque} ${produto.unidade}`;
     document.getElementById('quantidadeEntrada').value = '';
-    
+
     // Abre o modal
     modal.style.display = 'flex';
 }
