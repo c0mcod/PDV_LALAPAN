@@ -1,165 +1,170 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LalaPDV - Sistema de Vendas</title>
     <link rel="stylesheet" href="../css/sale.css">
 </head>
+
 <body>
 
-<!-- Cabeçalho -->
-<div class="header">
-    <div class="header-left">
-        <div class="logo">LalaPDV</div>
-        <div class="page-title">Venda</div>
-    </div>
-    <div class="header-right">
-        <div class="caixa-info">Caixa 001</div>
-        <button class="close-btn">✕</button>
-    </div>
-</div>
-
-<!-- Container Principal -->
-<div class="main-container">
-
-    <!-- Banner Lateral Esquerdo -->
-    <div class="left-banner">
-        <div class="banner-content">
-            <div class="banner-logo"></div>
-            <div class="banner-title"></div>
-            <div class="banner-subtitle"></div>
-            <div class="banner-contact"></div>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">LalaPDV</div>
+            <div class="page-title">Venda</div>
+        </div>
+        <div class="header-right">
+            <div class="caixa-info">Caixa 001</div>
+            <button class="close-btn">✕</button>
         </div>
     </div>
 
-    <!-- Painel Direito -->
-    <div class="right-panel">
+    <!-- Container Principal -->
+    <div class="main-container">
 
-        <!-- Info do Registro -->
-        <div class="registro-info">
-            Registro Atual
-        </div>
-
-        <!-- Produto em Destaque -->
-        <div class="produto-destaque">
-
-            <div class="produto-header">
-                <div class="produto-titulo" id="produtoTitulo">
-                    Selecione um produto
-                </div>
-            </div>
-
-            <div class="produto-controles">
-
-                <div class="form-group">
-                    <label>Quantidade</label>
-                    <input type="number" id="quantidadeInput" min="1" value="1">
-                </div>
-
-                <div class="form-group">
-                    <label>Produto</label>
-                    <select id="produtoSelect">
-                        <option value="">Selecione...</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Preço unitário</label>
-                    <input type="text" id="precoUnitarioInput" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label>Preço total</label>
-                    <input type="text" id="precoTotalInput" readonly style="font-weight: 700;">
-                </div>
-
-            </div>
-
-            <div style="margin-top: 15px; text-align: right;">
-                <button class="btn-add-produto" id="btnAdicionarItem">
-                    + Adicionar Item
-                </button>
+        <!-- Banner Lateral Esquerdo -->
+        <div class="left-banner">
+            <div class="banner-content">
+                <div class="banner-logo"></div>
+                <div class="banner-title"></div>
+                <div class="banner-subtitle"></div>
+                <div class="banner-contact"></div>
             </div>
         </div>
 
-        <!-- Lista de Itens -->
-        <div class="itens-container">
-            <div class="itens-titulo">Itens do Grupo</div>
+        <!-- Painel Direito -->
+        <div class="right-panel">
 
-            <!-- Itens inseridos dinamicamente -->
-            <div id="listaItensVenda"></div>
-        </div>
-
-        <!-- Rodapé -->
-        <div class="footer">
-
-            <div class="operador-info">
-                Atendido por: OPERADOR CAIXA
+            <!-- Info do Registro -->
+            <div class="registro-info">
+                Registro Atual
             </div>
 
-            <div style="display: flex; align-items: center;">
+            <!-- Produto em Destaque -->
+            <div class="produto-destaque">
 
-                <div class="total-info">
-                    <div class="subtotal-label">Subtotal</div>
-                    <div class="total-valor" id="subtotalVenda">
-                        R$ 0,00
+                <div class="produto-header">
+                    <div class="produto-titulo" id="produtoTitulo">
+                        Selecione um produto
                     </div>
                 </div>
 
-                <div class="action-buttons">
-                    <button class="btn-action btn-cancelar" id="btnCancelarVenda">
-                        Cancelar
-                    </button>
-                    <button class="btn-action btn-finalizar" id="btnFinalizarVenda">
-                        Finalizar
-                    </button>
+                <div class="produto-controles">
+
+                    <div class="form-group">
+                        <label>Quantidade</label>
+                        <input type="number" id="quantidadeInput" min="1" value="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Produto</label>
+                        <select id="produtoSelect">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preço unitário</label>
+                        <input type="text" id="precoUnitarioInput" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preço total</label>
+                        <input type="text" id="precoTotalInput" readonly style="font-weight: 700;">
+                    </div>
+
                 </div>
 
+                <div style="margin-top: 15px; text-align: right;">
+                    <button class="btn-add-produto" id="btnAdicionarItem">
+                        + Adicionar Item
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lista de Itens -->
+            <div class="itens-container">
+                <div class="itens-titulo">Itens do Grupo</div>
+
+                <!-- Itens inseridos dinamicamente -->
+                <div id="listaItensVenda"></div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="footer">
+
+                <div class="operador-info">
+                    Atendido por: OPERADOR CAIXA
+                </div>
+
+                <div style="display: flex; align-items: center;">
+
+                    <div class="total-info">
+                        <div class="subtotal-label">Subtotal</div>
+                        <div class="total-valor" id="subtotalVenda">
+                            R$ 0,00
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-action btn-cancelar" id="btnCancelarVenda">
+                            Cancelar
+                        </button>
+                        <button class="btn-action btn-finalizar" id="btnFinalizarVenda">
+                            Finalizar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="modalPagamento" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Finalizar Venda</h3>
+
+            <div class="modal-summary">
+                <span class="label">Total a pagar:</span>
+                <span id="valorTotalModal" class="total-value">R$ 0,00</span>
+            </div>
+
+            <div class="form-group">
+                <label for="metodoPagamento">Forma de Pagamento</label>
+                <select id="metodoPagamento" class="modal-input">
+                    <option value="DINHEIRO">Dinheiro</option>
+                    <option value="DEBITO">Cartão de Débito</option>
+                    <option value="CREDITO">Cartão de Crédito</option>
+                    <option value="PIX">Pix</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="valorRecebido">Valor Recebido</label>
+                <input type="number" id="valorRecebido" class="modal-input" step="0.01" placeholder="0,00">
+            </div>
+
+            <div class="troco-container">
+                <span>Troco:</span>
+                <span id="valorTroco" class="troco-value">R$ 0,00</span>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel-modal"
+                    onclick="document.getElementById('modalPagamento').style.display='none'">Voltar</button>
+                <button type="button" id="btnConfirmarFinalizacao" class="btn-confirm-modal">Confirmar
+                    Pagamento</button>
             </div>
         </div>
-
     </div>
-</div>
 
-<div id="modalPagamento" class="modal">
-    <div class="modal-content">
-        <h3 class="modal-title">Finalizar Venda</h3>
-
-        <div class="modal-summary">
-            <span class="label">Total a pagar:</span>
-            <span id="valorTotalModal" class="total-value">R$ 0,00</span>
-        </div>
-
-        <div class="form-group">
-            <label for="metodoPagamento">Forma de Pagamento</label>
-            <select id="metodoPagamento" class="modal-input">
-                <option value="DINHEIRO">Dinheiro</option>
-                <option value="DEBITO">Cartão de Débito</option>
-                <option value="CREDITO">Cartão de Crédito</option>
-                <option value="PIX">Pix</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="valorRecebido">Valor Recebido</label>
-            <input type="number" id="valorRecebido" class="modal-input" step="0.01" placeholder="0,00">
-        </div>
-
-        <div class="troco-container">
-            <span>Troco:</span>
-            <span id="valorTroco" class="troco-value">R$ 0,00</span>
-        </div>
-
-        <div class="modal-actions">
-            <button type="button" class="btn-cancel-modal" onclick="document.getElementById('modalPagamento').style.display='none'">Voltar</button>
-            <button type="button" id="btnConfirmarFinalizacao" class="btn-confirm-modal">Confirmar Pagamento</button>
-        </div>
-    </div>
-</div>
-
-<script src="../js/api.js"></script>
-<script src="../js/sale.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/sale.js"></script>
 
 </body>
+
 </html>

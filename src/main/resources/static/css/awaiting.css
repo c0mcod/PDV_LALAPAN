@@ -66,22 +66,6 @@ body {
     transition: grid-template-columns 0.3s ease;
 }
 
-/* Sidebar */
-.left-banner {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    overflow: hidden;
-}
-
-.banner-content { text-align: center; color: white; width: 100%; }
-.banner-logo { font-size: 48px; margin-bottom: 10px; }
-.banner-title { font-size: 32px; font-weight: 700; margin-bottom: 5px; }
-.banner-subtitle { font-size: 16px; opacity: 0.9; margin-bottom: 30px; }
-.banner-contact { font-size: 13px; line-height: 1.8; opacity: 0.8; }
-
 
 /* Painel Direito (Conteúdo Central) */
 .right-panel {
@@ -201,7 +185,6 @@ body {
 }
 
 /* --- Media Queries Desktop --- */
-
 @media (max-width: 1366px) {
     .main-container { grid-template-columns: 240px 1fr; }
     
@@ -213,7 +196,6 @@ body {
 
 @media (max-width: 1100px) {
     .main-container { grid-template-columns: 0px 1fr; }
-    .left-banner { display: none; }
     
     .right-panel { padding: 20px; }
     .venda-card { max-width: 450px; }

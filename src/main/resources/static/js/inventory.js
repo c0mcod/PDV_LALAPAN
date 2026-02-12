@@ -403,3 +403,13 @@ document.getElementById('btn-confirmar-exclusao').onclick = async () => {
 // BOTÃO DE EXPORTAR PRODUTOS
 // ===================================
 document.getElementById('btn-exportar').addEventListener('click', apiExportarProdutos);
+
+// ===================================
+// BOTÃO DE COLAPSAR MENU
+// ===================================
+const toggleMenuBtn = document.getElementById('toggleMenu');
+const navMenu = document.getElementById('navMenu');
+
+toggleMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('collapsed');
+});

@@ -25,3 +25,13 @@ btnIniciarVenda.addEventListener("click", async () => {
     btnIniciarVenda.disabled = false;
   }
 });
+
+// ===================================
+// BOTÃO DE COLAPSAR MENU
+// ===================================
+const toggleMenuBtn = document.getElementById('toggleMenu');
+const navMenu = document.getElementById('navMenu');
+
+toggleMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('collapsed');
+});

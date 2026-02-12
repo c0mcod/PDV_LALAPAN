@@ -207,3 +207,13 @@ function formatarValor(valor) {
     }
     return `R$ ${valor.toFixed(2)}`;
 }
+
+// ===================================
+// BOTÃO DE COLAPSAR MENU
+// ===================================
+const toggleMenuBtn = document.getElementById('toggleMenu');
+const navMenu = document.getElementById('navMenu');
+
+toggleMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('collapsed');
+});

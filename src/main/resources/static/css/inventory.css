@@ -260,19 +260,6 @@ body {
     transition: grid-template-columns 0.3s ease;
 }
 
-/* Sidebar */
-.left-banner {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    display: flex;
-    flex-direction: column;
-    padding: 25px 20px;
-    overflow-y: auto;
-}
-
-.banner-content { text-align: center; color: white; margin-bottom: 30px; flex-shrink: 0; }
-.banner-logo { font-size: 42px; margin-bottom: 10px; }
-.banner-title { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
-.banner-subtitle { font-size: 14px; opacity: 0.9; }
 
 /* Cards Estatísticas */
 .stats-cards { display: flex; flex-direction: column; gap: 15px; }
