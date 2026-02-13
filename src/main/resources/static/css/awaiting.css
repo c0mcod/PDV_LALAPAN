@@ -121,7 +121,7 @@ body {
 .card-icon {
     font-size: 120px;
     color: #2a5298;
-    opacity: 0.9;
+    opacity: 0.6;
     margin-bottom: 10px;
     display: block;
     animation: float 3s ease-in-out infinite;

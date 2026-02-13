@@ -95,6 +95,14 @@ body {
     flex-shrink: 0;
 }
 
+.period-filters svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+    vertical-align: middle;
+    fill: #fff;
+}
+
 .filter-title {
     font-size: 13px;
     font-weight: 600;
@@ -195,6 +203,13 @@ body {
     opacity: 0.15;
 }
 
+.kpi-icon svg{
+    width: 60px;
+    height: 60px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
 .kpi-label {
     font-size: 12px;
     color: #6c757d;
@@ -243,6 +258,13 @@ body {
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e9ecef;
+}
+
+.chart-title svg{
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 .chart-canvas-container {

@@ -35,27 +35,36 @@
       <!-- Menu que vai colapsar -->
       <nav class="nav-menu" id="navMenu">
         <a href="../pages/sale.html" class="nav-item">
-          <span class="nav-icon">🛒</span>
+          <svg class="nav-icon">
+            <use href="../assets/icons.svg#icon-pdv"></use>
+          </svg>
           <span class="nav-label">PDV</span>
         </a>
         <a href="../pages/inventory.html" class="nav-item active">
-          <span class="nav-icon">📦</span>
+          <svg class="nav-icon">
+            <use href="../assets/icons.svg#icon-box"></use>
+          </svg>
           <span class="nav-label">Estoque</span>
         </a>
         <a href="../pages/reports.html" class="nav-item">
-          <span class="nav-icon">📊</span>
+          <svg class="nav-icon">
+            <use href="../assets/icons.svg#icon-reports"></use>
+          </svg>
           <span class="nav-label">Relatórios</span>
         </a>
       </nav>
+
       <div class="banner-content">
-        <div class="banner-logo">📊</div>
+        <svg class="banner-logo">
+          <use href="../assets/icons.svg#icon-reports"></use>
+        </svg>
         <div class="banner-title">RELATÓRIOS</div>
         <div class="banner-subtitle">Análise de Dados</div>
       </div>
 
       <!-- Filtros de Período -->
       <div class="period-filters">
-        <div class="filter-title">📅 Período</div>
+        <div class="filter-title"><svg><use href="../assets/icons.svg#icon-date-range"></use></svg> Período</div>
         <div class="filter-options">
           <button class="filter-btn">Hoje</button>
           <button class="filter-btn">Últimos 7 dias</button>
@@ -89,28 +98,28 @@
       <!-- Cards de KPIs -->
       <div class="kpi-cards">
         <div class="kpi-card">
-          <div class="kpi-icon">💵</div>
+          <div class="kpi-icon"><svg><use href="../assets/icons.svg#icon-money"></use></svg></div>
           <div class="kpi-label">Faturamento</div>
           <div class="kpi-value">-</div>
           <div class="kpi-change">-</div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-icon">💰</div>
+          <div class="kpi-icon"><svg><use href="../assets/icons.svg#icon-bag-money"></use></div>
           <div class="kpi-label">Lucro Bruto</div>
           <div class="kpi-value">-</div>
           <div class="kpi-change">-</div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-icon">🎫</div>
+          <div class="kpi-icon"><svg><use href="../assets/icons.svg#icon-ticket"></use></div>
           <div class="kpi-label">Ticket Médio</div>
           <div class="kpi-value">-</div>
           <div class="kpi-change">-</div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-icon">📦</div>
+          <div class="kpi-icon"><svg><use href="../assets/icons.svg#icon-product-sell"></use></div>
           <div class="kpi-label">Produtos Vendidos</div>
           <div class="kpi-value">-</div>
           <div class="kpi-change">-</div>
@@ -120,7 +129,7 @@
       <div class="charts-section">
         <!-- Gráfico de Vendas -->
         <div class="chart-card">
-          <div class="chart-title">📈 Vendas por Dia da Semana</div>
+          <div class="chart-title"><svg><use href="../assets/icons.svg#icon-vendas-dia"></use></svg> Vendas por Dia da Semana</div>
           <div class="chart-canvas-container">
             <canvas id="vendasChart"></canvas>
           </div>
@@ -128,7 +137,7 @@
 
         <!-- Top 5 Produtos -->
         <div class="chart-card">
-          <div class="chart-title">🏆 Top 5 Produtos</div>
+          <div class="chart-title"><svg><use href="../assets/icons.svg#icon-top-produtos"></use></svg> Top 5 Produtos</div>
           <div class="top-products">
             <!-- Será preenchido pelo JS -->
           </div>
@@ -139,7 +148,7 @@
       <div class="bottom-section">
         <!-- Vendas por Categoria -->
         <div class="chart-card">
-          <div class="chart-title">📊 Vendas por Categoria</div>
+          <div class="chart-title"><svg><use href="../assets/icons.svg#icon-vendas-geral-semana"></use></svg> Vendas por Categoria</div>
           <div class="category-table">
             <div class="category-row header">
               <div>Categoria</div>
@@ -152,7 +161,7 @@
 
         <!-- Resumo do Estoque (NOVO) -->
         <div class="chart-card">
-          <div class="chart-title">📦 Resumo do Estoque</div>
+          <div class="chart-title"><svg><use href="../assets/icons.svg#icon-product-sell"></use></svg> Resumo do Estoque</div>
           <div class="stock-summary">
             <!-- Será preenchido pelo JS -->
           </div>

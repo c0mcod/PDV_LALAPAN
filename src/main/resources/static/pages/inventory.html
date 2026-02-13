@@ -28,28 +28,38 @@
         <div class="left-banner">
             <!-- Botão toggle -->
             <button class="toggle-menu-btn" id="toggleMenu">
-                <span class="toggle-icon">☰ Menu</span>
+                <span class="toggle-icon"><svg>
+                        <use href="../assets/icons.svg#icon-menu"></use>
+                    </svg> Menu</span>
             </button>
 
             <!-- Menu que vai colapsar -->
             <nav class="nav-menu" id="navMenu">
                 <a href="../pages/sale.html" class="nav-item">
-                    <span class="nav-icon">🛒</span>
+                    <svg class="nav-icon">
+                        <use href="../assets/icons.svg#icon-pdv"></use>
+                    </svg>
                     <span class="nav-label">PDV</span>
                 </a>
                 <a href="../pages/inventory.html" class="nav-item active">
-                    <span class="nav-icon">📦</span>
+                    <svg class="nav-icon">
+                        <use href="../assets/icons.svg#icon-box"></use>
+                    </svg>
                     <span class="nav-label">Estoque</span>
                 </a>
                 <a href="../pages/reports.html" class="nav-item">
-                    <span class="nav-icon">📊</span>
+                    <svg class="nav-icon">
+                        <use href="../assets/icons.svg#icon-reports"></use>
+                    </svg>
                     <span class="nav-label">Relatórios</span>
                 </a>
             </nav>
 
 
             <div class="banner-content">
-                <div class="banner-logo">📦</div>
+                <svg class="banner-logo">
+                    <use href="../assets/icons.svg#icon-estoque"></use>
+                </svg>
                 <div class="banner-title">ESTOQUE</div>
                 <div class="banner-subtitle">Controle Total</div>
             </div>
@@ -88,13 +98,17 @@
             <div class="toolbar">
                 <div class="search-section">
                     <input type="text" class="search-box"
-                        placeholder="🔍 Buscar produto por nome, código ou categoria...">
+                        placeholder="Buscar produto por nome, código ou categoria...">
                 </div>
 
                 <div class="toolbar-actions">
                     <!-- <button class="btn-toolbar btn-filtro">🔽 Filtros</button> -->
-                    <button class="btn-toolbar btn-exportar" id="btn-exportar">📊 Exportar</button>
-                    <button class="btn-toolbar btn-novo" id="btnNovoProduto">+ Novo Produto</button>
+                    <button class="btn-toolbar btn-exportar" id="btn-exportar"><svg>
+                            <use href="../assets/icons.svg#icon-export"></use>
+                        </svg> Exportar</button>
+                    <button class="btn-toolbar btn-novo" id="btnNovoProduto"><svg>
+                            <use href="../assets/icons.svg#icon-new-product"></use>
+                        </svg> Novo Produto</button>
                 </div>
             </div>
 
@@ -119,249 +133,236 @@
                 </table>
             </div>
 
-            <!-- Rodapé -->
-            <div class="footer">
-                <div>Mostrando produtos</div>
-                <div class="pagination">
-                    <button class="page-btn">◀</button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
-                    <button class="page-btn">▶</button>
+            <!-- Modal de Entrada de Estoque -->
+            <div id="modalEntradaEstoque" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>📦 Registrar Entrada de Estoque</h2>
+                        <span class="modal-close">&times;</span>
+                    </div>
+
+                    <form id="formEntradaEstoque">
+                        <input type="hidden" id="produtoIdEntrada">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Produto</label>
+                                <input type="text" id="produtoNomeEntrada" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Estoque Atual</label>
+                                <input type="text" id="estoqueAtualEntrada" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantidade a Adicionar *</label>
+                                <input type="number" id="quantidadeEntrada" step="0.01" min="0.01" required
+                                    placeholder="Ex: 50">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancelar">Cancelar</button>
+                            <button type="submit" class="btn-primary">Registrar Entrada</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal de Entrada de Estoque -->
-    <div id="modalEntradaEstoque" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📦 Registrar Entrada de Estoque</h2>
-                <span class="modal-close">&times;</span>
+            <!-- Modal Cadastro de Produto -->
+            <div id="modalProduto" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>📦 Novo Produto</h2>
+                        <span class="modal-close">&times;</span>
+                    </div>
+                    <form id="formProduto">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome do Produto *</label>
+                                <input type="text" id="nome" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Código de Barras *</label>
+                                <input type="text" id="codigo" name="codigo" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Preço de Custo *</label>
+                                <input type="number" id="precoCusto" name="precoCusto" step="0.01" required
+                                    placeholder="Quanto você paga">
+                            </div>
+                            <div class="form-group">
+                                <label>Preço de Venda *</label>
+                                <input type="number" id="preco" name="preco" step="0.01" required
+                                    placeholder="Quanto você cobra">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <!-- Modal Cadastro de Produto -->
+                            <div class="form-group">
+                                <label>Categoria *</label>
+                                <select id="categoria" name="categoria" required>
+                                    <option value="">Selecione uma categoria</option>
+                                    <option value="PADARIA">Padaria e Sobremesas</option>
+                                    <option value="LATICINIOS">Laticínios</option>
+                                    <option value="HORTIFRUTI">Hortifruti</option>
+                                    <option value="BEBIDAS">Bebidas</option>
+                                    <option value="LIMPEZA">Bazar e Limpeza</option>
+                                    <option value="MERCEARIA">Mercearia</option>
+                                    <option value="HIGIENE">Higiene</option>
+                                    <option value="CARNES">Carnes</option>
+                                    <option value="CONGELADOS">Comidas Prontas e Congeladas</option>
+                                    <option value="FRIOS">Frios e Derivados</option>
+                                    <option value="FRUTAS_E_VERDURAS">Frutas, Ovos e Verduras</option>
+                                    <option value="IMPORTADOS">Importados</option>
+                                    <option value="SAUDE_E_BELEZA">Saúde e Beleza</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantidade em Estoque *</label>
+                                <input type="number" id="quantidadeEstoque" name="quantidadeEstoque" step="0.01"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Estoque Mínimo *</label>
+                                <input type="number" id="estoqueMinimo" name="estoqueMinimo" step="0.01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Unidade *</label>
+                                <select id="unidade" name="unidade" required>
+                                    <option value="">Selecione</option>
+                                    <option value="UN">Unidade (UN)</option>
+                                    <option value="KG">Quilograma (KG)</option>
+                                    <option value="LT">Litro (LT)</option>
+                                    <option value="CX">Caixa (CX)</option>
+                                    <option value="PC">Pacote (PC)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancelar">Cancelar</button>
+                            <button type="submit" class="btn-salvar">Salvar Produto</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <form id="formEntradaEstoque">
-                <input type="hidden" id="produtoIdEntrada">
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Produto</label>
-                        <input type="text" id="produtoNomeEntrada" readonly>
+            <!-- Modal Atualização de Produto -->
+            <div id="modalAtualizarProduto" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>✏️ Atualizar Produto</h2>
+                        <span class="modal-close">&times;</span>
                     </div>
-                </div>
+                    <form id="formAtualizarProduto">
+                        <!-- Campo oculto para guardar o ID do produto -->
+                        <input type="hidden" id="produtoId" name="produtoId">
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Estoque Atual</label>
-                        <input type="text" id="estoqueAtualEntrada" readonly>
-                    </div>
-                </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome do Produto *</label>
+                                <input type="text" id="nomeAtualizar" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Código de Barras *</label>
+                                <input type="text" id="codigoAtualizar" name="codigo" required>
+                            </div>
+                        </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Quantidade a Adicionar *</label>
-                        <input type="number" id="quantidadeEntrada" step="0.01" min="0.01" required
-                            placeholder="Ex: 50">
-                    </div>
-                </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Preço de Custo *</label>
+                                <input type="number" id="precoCustoAtualizar" name="precoCusto" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Preço de Venda *</label>
+                                <input type="number" id="precoAtualizar" name="preco" step="0.01" required>
+                            </div>
+                        </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-primary">Registrar Entrada</button>
-                </div>
-            </form>
-        </div>
-    </div>
+                        <div class="form-row">
+                            <!-- Modal Cadastro de Produto -->
+                            <div class="form-group">
+                                <label>Categoria *</label>
+                                <select id="categoriaAtualizar" name="categoria" required>
+                                    <option value="">Selecione uma categoria</option>
+                                    <option value="PADARIA">Padaria e Sobremesas</option>
+                                    <option value="LATICINIOS">Laticínios</option>
+                                    <option value="HORTIFRUTI">Hortifruti</option>
+                                    <option value="BEBIDAS">Bebidas</option>
+                                    <option value="LIMPEZA">Bazar e Limpeza</option>
+                                    <option value="MERCEARIA">Mercearia</option>
+                                    <option value="HIGIENE">Higiene</option>
+                                    <option value="CARNES">Carnes</option>
+                                    <option value="CONGELADOS">Comidas Prontas e Congeladas</option>
+                                    <option value="FRIOS">Frios e Derivados</option>
+                                    <option value="FRUTAS_E_VERDURAS">Frutas, Ovos e Verduras</option>
+                                    <option value="IMPORTADOS">Importados</option>
+                                    <option value="SAUDE_E_BELEZA">Saúde e Beleza</option>
+                                </select>
+                            </div>
+                        </div>
 
-    <!-- Modal Cadastro de Produto -->
-    <div id="modalProduto" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📦 Novo Produto</h2>
-                <span class="modal-close">&times;</span>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantidade em Estoque *</label>
+                                <input type="number" id="quantidadeEstoqueAtualizar" name="quantidadeEstoque"
+                                    step="0.01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Unidade *</label>
+                                <select id="unidadeAtualizar" name="unidade" required>
+                                    <option value="">Selecione</option>
+                                    <option value="UN">Unidade (UN)</option>
+                                    <option value="KG">Quilograma (KG)</option>
+                                    <option value="LT">Litro (LT)</option>
+                                    <option value="CX">Caixa (CX)</option>
+                                    <option value="PC">Pacote (PC)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancelar">Cancelar</button>
+                            <button type="submit" class="btn-salvar">Atualizar Produto</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form id="formProduto">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nome do Produto *</label>
-                        <input type="text" id="nome" name="nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Código de Barras *</label>
-                        <input type="text" id="codigo" name="codigo" required>
+
+            <!-- Modal Exclusão de produto -->
+            <div id="modal-confirmar-exclusao" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Confirmar Exclusão</h3>
+                    <p>Tem certeza que deseja excluir este produto?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                        <button type="button" id="btn-confirmar-exclusao" class="btn-excluir">Excluir</button>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Preço de Custo *</label>
-                        <input type="number" id="precoCusto" name="precoCusto" step="0.01" required placeholder="Quanto você paga">
-                    </div>
-                    <div class="form-group">
-                        <label>Preço de Venda *</label>
-                        <input type="number" id="preco" name="preco" step="0.01" required placeholder="Quanto você cobra">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <!-- Modal Cadastro de Produto -->
-                    <div class="form-group">
-                        <label>Categoria *</label>
-                        <select id="categoria" name="categoria" required>
-                            <option value="">Selecione uma categoria</option>
-                            <option value="PADARIA">Padaria e Sobremesas</option>
-                            <option value="LATICINIOS">Laticínios</option>
-                            <option value="HORTIFRUTI">Hortifruti</option>
-                            <option value="BEBIDAS">Bebidas</option>
-                            <option value="LIMPEZA">Bazar e Limpeza</option>
-                            <option value="MERCEARIA">Mercearia</option>
-                            <option value="HIGIENE">Higiene</option>
-                            <option value="CARNES">Carnes</option>
-                            <option value="CONGELADOS">Comidas Prontas e Congeladas</option>
-                            <option value="FRIOS">Frios e Derivados</option>
-                            <option value="FRUTAS_E_VERDURAS">Frutas, Ovos e Verduras</option>
-                            <option value="IMPORTADOS">Importados</option>
-                            <option value="SAUDE_E_BELEZA">Saúde e Beleza</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Quantidade em Estoque *</label>
-                        <input type="number" id="quantidadeEstoque" name="quantidadeEstoque" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Estoque Mínimo *</label>
-                        <input type="number" id="estoqueMinimo" name="estoqueMinimo" step="0.01" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Unidade *</label>
-                        <select id="unidade" name="unidade" required>
-                            <option value="">Selecione</option>
-                            <option value="UN">Unidade (UN)</option>
-                            <option value="KG">Quilograma (KG)</option>
-                            <option value="LT">Litro (LT)</option>
-                            <option value="CX">Caixa (CX)</option>
-                            <option value="PC">Pacote (PC)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-salvar">Salvar Produto</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Atualização de Produto -->
-    <div id="modalAtualizarProduto" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>✏️ Atualizar Produto</h2>
-                <span class="modal-close">&times;</span>
             </div>
-            <form id="formAtualizarProduto">
-                <!-- Campo oculto para guardar o ID do produto -->
-                <input type="hidden" id="produtoId" name="produtoId">
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nome do Produto *</label>
-                        <input type="text" id="nomeAtualizar" name="nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Código de Barras *</label>
-                        <input type="text" id="codigoAtualizar" name="codigo" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Preço de Custo *</label>
-                        <input type="number" id="precoCustoAtualizar" name="precoCusto" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Preço de Venda *</label>
-                        <input type="number" id="precoAtualizar" name="preco" step="0.01" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <!-- Modal Cadastro de Produto -->
-                    <div class="form-group">
-                        <label>Categoria *</label>
-                        <select id="categoriaAtualizar" name="categoria" required>
-                            <option value="">Selecione uma categoria</option>
-                            <option value="PADARIA">Padaria e Sobremesas</option>
-                            <option value="LATICINIOS">Laticínios</option>
-                            <option value="HORTIFRUTI">Hortifruti</option>
-                            <option value="BEBIDAS">Bebidas</option>
-                            <option value="LIMPEZA">Bazar e Limpeza</option>
-                            <option value="MERCEARIA">Mercearia</option>
-                            <option value="HIGIENE">Higiene</option>
-                            <option value="CARNES">Carnes</option>
-                            <option value="CONGELADOS">Comidas Prontas e Congeladas</option>
-                            <option value="FRIOS">Frios e Derivados</option>
-                            <option value="FRUTAS_E_VERDURAS">Frutas, Ovos e Verduras</option>
-                            <option value="IMPORTADOS">Importados</option>
-                            <option value="SAUDE_E_BELEZA">Saúde e Beleza</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Quantidade em Estoque *</label>
-                        <input type="number" id="quantidadeEstoqueAtualizar" name="quantidadeEstoque" step="0.01"
-                            required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Unidade *</label>
-                        <select id="unidadeAtualizar" name="unidade" required>
-                            <option value="">Selecione</option>
-                            <option value="UN">Unidade (UN)</option>
-                            <option value="KG">Quilograma (KG)</option>
-                            <option value="LT">Litro (LT)</option>
-                            <option value="CX">Caixa (CX)</option>
-                            <option value="PC">Pacote (PC)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-salvar">Atualizar Produto</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Exclusão de produto -->
-    <div id="modal-confirmar-exclusao" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h3>Confirmar Exclusão</h3>
-            <p>Tem certeza que deseja excluir este produto?</p>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-                <button type="button" id="btn-confirmar-exclusao" class="btn-excluir">Excluir</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../js/api.js"></script>
-    <script src="../js/inventory.js"></script>
+            <script src="../js/api.js"></script>
+            <script src="../js/inventory.js"></script>
 </body>
 
 </html>

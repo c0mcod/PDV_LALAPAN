@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,24 +8,25 @@
     <link rel="stylesheet" href="../css/menu.css">
     <link rel="stylesheet" href="../css/awaiting.css">
 </head>
-<body>
-<!-- Cabeçalho -->
-<div class="header">
-    <div class="header-left">
-        <div class="logo">LalaPDV</div>
-        <div class="page-title">Sistema de Vendas</div>
-    </div>
-    <div class="header-right">
-        <div class="caixa-info">Caixa 001</div>
-        <button class="close-btn">✕</button>
-    </div>
-</div>
 
-<!-- Container Principal -->
-<div class="main-container">
-    <!-- Banner Lateral Esquerdo -->
-    <div class="left-banner">
-        <!-- Botão toggle -->
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">LalaPDV</div>
+            <div class="page-title">Sistema de Vendas</div>
+        </div>
+        <div class="header-right">
+            <div class="caixa-info">Caixa 001</div>
+            <button class="close-btn">✕</button>
+        </div>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="main-container">
+        <!-- Banner Lateral Esquerdo -->
+        <div class="left-banner">
+            <!-- Botão toggle -->
             <button class="toggle-menu-btn" id="toggleMenu">
                 <span class="toggle-icon">☰ Menu</span>
             </button>
@@ -32,62 +34,73 @@
             <!-- Menu que vai colapsar -->
             <nav class="nav-menu" id="navMenu">
                 <a href="../pages/sale.html" class="nav-item">
-                    <span class="nav-icon">🛒</span>
+                    <svg class="nav-icon">
+                        <use href="../assets/icons.svg#icon-pdv"></use>
+                    </svg>
                     <span class="nav-label">PDV</span>
                 </a>
                 <a href="../pages/inventory.html" class="nav-item active">
-                    <span class="nav-icon">📦</span>
+                    <svg class="nav-icon">
+                        <use href="../assets/icons.svg#icon-box"></use>
+                    </svg>
                     <span class="nav-label">Estoque</span>
                 </a>
                 <a href="../pages/reports.html" class="nav-item">
-                    <span class="nav-icon">📊</span>
+                    <svg class="nav-icon">
+                        <use href="../assets/icons.svg#icon-reports"></use>
+                    </svg>
                     <span class="nav-label">Relatórios</span>
                 </a>
             </nav>
-            
-        <div class="banner-content">
-            <div class="banner-logo">💼</div>
-            <div class="banner-title">RK</div>
-            <div class="banner-subtitle">SOLUTIONS</div>
-            <div class="banner-contact">
-                📞 (11) 2626-1366<br>
-                📞 (11) 2505-1440<br>
-                🌐 www.rksolutions.com.br
+
+            <!--
+            <div class="banner-content">
+                <div class="banner-logo">💼</div>
+                <div class="banner-title">RK</div>
+                <div class="banner-subtitle">SOLUTIONS</div>
+                <div class="banner-contact">
+                    📞 (11) 2626-1366<br>
+                    📞 (11) 2505-1440<br>
+                    🌐 www.rksolutions.com.br
+                </div>
+            </div>
+            -->
+        </div>
+
+        <!-- Painel Direito -->
+        <div class="right-panel">
+            <div class="venda-card">
+                <!-- Status -->
+                <div class="caixa-status">
+                    <span class="status-dot"></span>
+                    Caixa Aberto e Operacional
+                </div>
+
+                <!-- Ícone -->
+                <div class="card-icon"><svg>
+                        <use href="../assets/icons.svg#icon-sale"></use>
+                    </svg></div>
+
+                <!-- Título -->
+                <div class="card-title">Pronto para Vender!</div>
+                <div class="card-subtitle">
+                    Clique no botão abaixo para iniciar<br>uma nova venda no sistema
+                </div>
+
+                <!-- Botão -->
+                <button class="btn-iniciar">
+                    ✨ Iniciar Nova Venda
+                </button>
+
+                <div class="footer-text">
+                    O sistema irá gerar um ID único para esta venda
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Painel Direito -->
-    <div class="right-panel">
-        <div class="venda-card">
-            <!-- Status -->
-            <div class="caixa-status">
-                <span class="status-dot"></span>
-                Caixa Aberto e Operacional
-            </div>
-
-            <!-- Ícone -->
-            <div class="card-icon">🛒</div>
-
-            <!-- Título -->
-            <div class="card-title">Pronto para Vender!</div>
-            <div class="card-subtitle">
-                Clique no botão abaixo para iniciar<br>uma nova venda no sistema
-            </div>
-
-            <!-- Botão -->
-            <button class="btn-iniciar">
-                ✨ Iniciar Nova Venda
-            </button>
-
-            <div class="footer-text">
-                O sistema irá gerar um ID único para esta venda
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="../js/api.js"></script>
-<script src="../js/awaiting.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/awaiting.js"></script>
 </body>
+
 </html>
