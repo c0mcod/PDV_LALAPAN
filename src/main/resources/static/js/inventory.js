@@ -57,6 +57,9 @@ function renderizarProdutos(produtos) {
                 </span>
             </td>
             <td>
+                <div class="price-value">R$ ${formatarPreco(produto.precoCusto || 0)}</div>
+            </td>
+            <td>
                 <div class="price-value">R$ ${formatarPreco(produto.preco)}</div>
             </td>
             <td>
@@ -200,6 +203,7 @@ async function salvarProduto() {
 
     const produto = {
         nome: form.nome.value,
+        precoCusto: parseFloat(form.precoCusto.value),
         preco: parseFloat(form.preco.value),
         codigo: form.codigo.value,
         estoqueMinimo: parseFloat(form.estoqueMinimo.value),
@@ -259,6 +263,7 @@ function abrirModalAtualizar(produto) {
     document.getElementById('produtoId').value = produto.id;
     document.getElementById('nomeAtualizar').value = produto.nome;
     document.getElementById('codigoAtualizar').value = produto.codigo;
+    document.getElementById('precoCustoAtualizar').value = produto.precoCusto || 0;
     document.getElementById('precoAtualizar').value = produto.preco;
     document.getElementById('categoriaAtualizar').value = produto.categoria;
     document.getElementById('quantidadeEstoqueAtualizar').value = produto.quantidadeEstoque;
@@ -274,6 +279,7 @@ async function atualizarProduto() {
 
     const produtoAtualizado = {
         nome: document.getElementById('nomeAtualizar').value,
+        precoCusto: parseFloat(document.getElementById('precoCustoAtualizar').value),
         preco: parseFloat(document.getElementById('precoAtualizar').value),
         codigo: document.getElementById('codigoAtualizar').value,
         quantidadeEstoque: parseFloat(document.getElementById('quantidadeEstoqueAtualizar').value),
