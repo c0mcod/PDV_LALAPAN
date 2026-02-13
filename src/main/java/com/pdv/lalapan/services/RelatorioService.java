@@ -183,6 +183,33 @@ public class RelatorioService {
         return new EstoqueResumoDTO(valorTotal, criticos, baixos, totalAtivos, ok);
     }
 
+    public IndicadoresFinanceirosDTO calcularIndicadores(LocalDateTime inicio, LocalDateTime fim) {
+        BigDecimal faturamento = vendaRepo.calcularFaturamento(inicio,fim);
+        Integer totalVendas = vendaRepo.contarVendas(inicio, fim);
+
+        BigDecimal custoTotal = vendaRepo.findByDataHoraFechamentoBetween(inicio, fim)
+                .stream()
+                .flatMap(v -> v.getItens().stream())
+                .map(item -> item.getProduto().getPrecoCusto()
+                        .multiply(item.getQuantidade()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal lucro  = faturamento.subtract(custoTotal);
+        BigDecimal ticketMedio = totalVendas > 0
+                ? faturamento.divide(BigDecimal.valueOf(totalVendas), 2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO;
+
+        return new IndicadoresFinanceirosDTO(faturamento, lucro, ticketMedio, totalVendas);
+    }
+
+    public IndicadoresFinanceirosDTO calcularIndicadoresPorPeriodo(String periodo) {
+        LocalDateTime[] datas = calcularPeriodo(periodo);
+        LocalDateTime inicio = datas[0];
+        LocalDateTime fim = datas[1];
+
+        return calcularIndicadores(inicio, fim);
+    }
+
     // Métodos auxiliares
     private BigDecimal calcularPercentual(Number valorAtual, Number valorAnterior) {
         if (valorAnterior == null || valorAnterior.doubleValue() == 0) {

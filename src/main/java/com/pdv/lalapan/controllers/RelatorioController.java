@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -62,5 +63,11 @@ public class RelatorioController {
     @GetMapping("/resumo-estoque")
     public ResponseEntity<EstoqueResumoDTO> getResumoEstoque() {
         return ResponseEntity.ok(relatorioService.gerarResumo());
+    }
+
+    @GetMapping("/indicadores-financeiros")
+    public ResponseEntity<IndicadoresFinanceirosDTO> getIndicadores(
+            @RequestParam String periodo) {
+        return ResponseEntity.ok(relatorioService.calcularIndicadoresPorPeriodo(periodo));
     }
 }

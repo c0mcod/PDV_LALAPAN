@@ -38,7 +38,10 @@ public class Produto {
     private Long id;
 
     private String nome;
+
     private BigDecimal preco = BigDecimal.ZERO;
+    private BigDecimal precoCusto;
+
     private String codigo;
     private BigDecimal estoqueMinimo;
     private BigDecimal quantidadeEstoque;
@@ -138,6 +141,14 @@ public class Produto {
 
     public void setEstoqueMinimo(BigDecimal estoqueMinimo) {
         this.estoqueMinimo = estoqueMinimo;
+    }
+
+    public BigDecimal getPrecoCusto() {
+        return precoCusto;
+    }
+
+    public void setPrecoCusto(BigDecimal precoCusto) {
+        this.precoCusto = precoCusto;
     }
 
     public boolean isEstoqueBaixo() {

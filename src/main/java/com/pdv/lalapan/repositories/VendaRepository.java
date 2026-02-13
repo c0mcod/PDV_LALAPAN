@@ -55,4 +55,14 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim
     );
+
+    // Calcular faturamento
+    @Query("SELECT SUM(v.valorTotal) FROM Venda v WHERE v.dataHoraFechamento BETWEEN :inicio AND :fim")
+    BigDecimal calcularFaturamento(@Param("inicio") LocalDateTime inicio,
+                                   @Param("fim") LocalDateTime fim);
+
+    // Contar vendas
+    @Query("SELECT COUNT(v) FROM Venda v WHERE v.dataHoraFechamento BETWEEN :inicio AND :fim")
+    Integer contarVendas(@Param("inicio") LocalDateTime inicio,
+                         @Param("fim") LocalDateTime fim);
 }
