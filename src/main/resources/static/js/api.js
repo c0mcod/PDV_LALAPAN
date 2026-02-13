@@ -193,11 +193,3 @@ async function apiGetVendasCategoria(periodo) {
   }
   return response.json();
 }
-
-async function apiGetMetricasDesempenho(periodo) {
-  const response = await fetch(`${API_BASE_URL}/api/relatorios/metricas-desempenho?periodo=${periodo}`);
-  if(!response.ok) {
-    throw new Error("Erro ao buscar métricas");
-  }
-  return response.json();
-}

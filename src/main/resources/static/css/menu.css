@@ -1,0 +1,132 @@
+/* --- CONFIGURAÇÃO GERAL DO MENU --- */
+.left-banner {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 25px 20px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.left-banner::-webkit-scrollbar {
+    width: 6px;
+}
+
+.left-banner::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.left-banner::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.left-banner::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.left-banner > * {
+    flex-shrink: 0;
+    width: 100%;
+}
+
+/* --- BOTÃO TOGGLE --- */
+.toggle-menu-btn {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.toggle-menu-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* --- NAVEGAÇÃO --- */
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 800px;
+    opacity: 1;
+    margin-bottom: 25px;
+}
+
+.nav-menu.collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    opacity: 0;
+    padding: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(3px);
+}
+
+.nav-item.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-icon {
+    font-size: 18px;
+}
+
+.nav-label {
+    flex: 1;
+}
+
+/* --- CONTEÚDO DO BANNER (LOGO/TITULO) --- */
+.banner-content {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.banner-logo {
+    font-size: 42px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.banner-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.banner-subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+}

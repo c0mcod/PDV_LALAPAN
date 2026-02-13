@@ -38,7 +38,6 @@ async function carregarRelatorios(periodo) {
             apiGetVendasDiaSemana(periodo),
             apiGetTopProdutos(periodo, 5),
             apiGetVendasCategoria(periodo),
-            apiGetMetricasDesempenho(periodo)
         ]);
         
         // Atualizar cada seção
@@ -46,7 +45,6 @@ async function carregarRelatorios(periodo) {
         atualizarVendasDiaSemana(vendasDiaSemana);
         atualizarTopProdutos(topProdutos);
         atualizarVendasCategoria(vendasCategoria);
-        atualizarMetricas(metricas);
         
     } catch (error) {
         console.error('Erro ao carregar relatórios:', error);
@@ -182,23 +180,6 @@ function atualizarVendasCategoria(categorias) {
         `;
         container.appendChild(row);
     });
-}
-
-function atualizarMetricas(metricas) {
-    const container = document.querySelector('.performance-metrics');
-    if (!container) return;
-    
-    container.innerHTML = metricas.map(metrica => `
-        <div class="metric-item">
-            <div class="metric-header">
-                <div class="metric-label">${metrica.label}</div>
-                <div class="metric-value">${metrica.percentual.toFixed(1)}%</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${metrica.percentual}%;"></div>
-            </div>
-        </div>
-    `).join('');
 }
 
 function formatarValor(valor) {
