@@ -153,6 +153,7 @@ public class Venda {
             throw new MetodoDePagamentoInvalidoException(metodo);
         }
 
+        this.setMetodoPagamento(metodo);
         this.setStatus(StatusVenda.FINALIZADA);
         this.setDataHoraFechamento(LocalDateTime.now());
     }
