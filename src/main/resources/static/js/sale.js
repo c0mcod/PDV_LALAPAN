@@ -341,10 +341,32 @@ document.addEventListener("keydown", (e) => {
   const tag = document.activeElement.tagName;
   const digitandoEmInput = tag === "INPUT" || tag === "TEXTAREA";
 
+  if (!modalAberto && e.key === "Tab") {
+    e.preventDefault();
+    if (document.activeElement === produtoCodigoInput) {
+      quantidadeInput.focus();
+      quantidadeInput.select();
+    } else {
+      produtoCodigoInput.focus();
+    }
+  }
+
+  if (modalAberto && e.key === "Tab") {
+    e.preventDefault();
+    if (document.activeElement === metodoPagamentoSelect) {
+      valorRecebidoInput.focus();
+      valorRecebidoInput.select();
+    } else {
+      metodoPagamentoSelect.focus();
+    }
+  }
+
   // atalhos fora do modal
   if (!modalAberto) {
     if (e.key === "f" || e.key === "F") {
-      if (!digitandoEmInput) {
+      const noInputDoFluxo = document.activeElement === produtoCodigoInput ||
+        document.activeElement === quantidadeInput;
+      if (!digitandoEmInput || noInputDoFluxo) {
         e.preventDefault();
         btnFinalizarVenda.click();
       }
@@ -361,6 +383,10 @@ document.addEventListener("keydown", (e) => {
   // atalhos dentro do modal
   if (modalAberto) {
     if (e.key === "Escape") fecharModalPagamento();
-    if (e.key === "Enter") btnConfirmarFinalizacao.click();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      btnConfirmarFinalizacao.click();
+    }
   }
 });
