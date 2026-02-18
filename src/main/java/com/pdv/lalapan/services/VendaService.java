@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -100,9 +101,10 @@ public class VendaService {
 
         BigDecimal totalVenda = venda.getItens().stream()
                 .map(item -> item.getPrecoUnitario().multiply(item.getQuantidade()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
 
-        if (dto.valorRecebido().compareTo(totalVenda) < 0) {
+        if (dto.valorRecebido().setScale(2, RoundingMode.HALF_UP).compareTo(totalVenda) < 0) {
             throw new ValorInsuficienteException(dto.valorRecebido(), totalVenda);
         }
 
