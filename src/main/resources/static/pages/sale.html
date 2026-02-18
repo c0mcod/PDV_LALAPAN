@@ -130,7 +130,7 @@
             <h3 class="modal-title">Finalizar Venda</h3>
 
             <div class="modal-summary">
-                <span class="label">Total a pagar:</span>
+                <span class="label">Valor a pagar:</span>
                 <span id="valorTotalModal" class="total-value">R$ 0,00</span>
             </div>
 
@@ -155,10 +155,8 @@
             </div>
 
             <div class="modal-actions">
-                <button type="button" class="btn-cancel-modal"
-                    onclick="document.getElementById('modalPagamento').style.display='none'">Voltar</button>
-                <button type="button" id="btnConfirmarFinalizacao" class="btn-confirm-modal">Confirmar
-                    Pagamento</button>
+                <button type="button" class="btn-cancel-modal" onclick="fecharModalPagamento()">Voltar</button>
+                <button type="button" id="btnConfirmarFinalizacao" class="btn-confirm-modal">Confirmar</button>
             </div>
         </div>
     </div>

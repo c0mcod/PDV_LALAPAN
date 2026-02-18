@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renderizarItens();
     atualizarSubtotal();
+    produtoCodigoInput.focus();
 
   } catch (e) {
     showNotificationError("Erro ao carregar PDV. Por favor, tente novamente.");
@@ -213,22 +214,6 @@ function atualizarSubtotal() {
   subtotalVenda.textContent = `R$ ${total.toFixed(2)}`;
 }
 
-btnFinalizarVenda.addEventListener("click", () => {
-  if (itensVenda.length === 0) {
-    showNotificationError("Adicione pelo menos um item para finalizar a venda.");
-    return;
-  }
-
-  const totalTexto = subtotalVenda.textContent;
-
-  document.getElementById("valorTotalModal").textContent = totalTexto;
-
-  document.getElementById("valorRecebido").value = "";
-  document.getElementById("valorTroco").textContent = "R$ 0,00";
-
-  document.getElementById("modalPagamento").style.display = "block";
-});
-
 /* =========================
    CANCELAR VENDA
 ========================= */
@@ -245,81 +230,137 @@ btnCancelarVenda.addEventListener("click", async () => {
 });
 
 /* =========================
-   LÓGICA DO MODAL DE PAGAMENTO
+   MODAL DE PAGAMENTO
 ========================= */
+
 const modalPagamento = document.getElementById("modalPagamento");
 const valorRecebidoInput = document.getElementById("valorRecebido");
 const valorTrocoTexto = document.getElementById("valorTroco");
 const metodoPagamentoSelect = document.getElementById("metodoPagamento");
 const btnConfirmarFinalizacao = document.getElementById("btnConfirmarFinalizacao");
 
+let pagamentos = [];
+let totalOriginal = 0;
+
 const extrairValorNumerico = (elemento) => {
-  let texto = elemento.textContent || elemento.value || "0";
-  let limpo = texto.replace("R$ ", "").trim();
-  return parseFloat(limpo) || 0;
+  const texto = elemento.textContent || elemento.value || "0";
+  return parseFloat(texto.replace("R$ ", "").replace(",", ".").trim()) || 0;
 };
 
-valorRecebidoInput.addEventListener("input", () => {
-  const total = extrairValorNumerico(subtotalVenda);
-  const recebido = parseFloat(valorRecebidoInput.value) || 0;
-  const troco = recebido - total;
+function fecharModalPagamento() {
+  modalPagamento.style.display = "none";
+  pagamentos = [];
+  valorRecebidoInput.value = "";
+  valorTrocoTexto.textContent = "R$ 0,00";
+  metodoPagamentoSelect.value = "DINHEIRO";
+}
 
-  if (recebido >= total) {
-    valorTrocoTexto.textContent = `R$ ${troco.toFixed(2).replace(".", ",")}`;
-    valorTrocoTexto.style.color = "#2ecc71";
-  } else {
-    valorTrocoTexto.textContent = "R$ 0,00";
-    valorTrocoTexto.style.color = "#e74c3c";
-  }
-});
+function calcularTotalPago() {
+  return pagamentos.reduce((acc, p) => acc + p.valor, 0);
+}
 
-btnConfirmarFinalizacao.addEventListener("click", async () => {
-  const total = extrairValorNumerico(subtotalVenda);
-  const recebido = parseFloat(valorRecebidoInput.value) || 0;
-
-  // Agora o log deve mostrar: Recebido(15) < Total(13) -> Falso (Correto!)
-  console.log(`Verificando: Recebido(${recebido}) < Total(${total})`);
-
-  if (recebido < total) {
-    showNotificationError("Valor recebido é insuficiente para finalizar a venda.");
+btnFinalizarVenda.addEventListener("click", () => {
+  if (itensVenda.length === 0) {
+    showNotificationError("Adicione pelo menos um item para finalizar a venda.");
     return;
   }
 
+  pagamentos = [];
+  totalOriginal = extrairValorNumerico(subtotalVenda);
+  document.getElementById("valorTotalModal").textContent = subtotalVenda.textContent;
+  valorRecebidoInput.value = totalOriginal.toFixed(2);
+  valorTrocoTexto.textContent = "R$ 0,00";
+  metodoPagamentoSelect.value = "DINHEIRO";
+  modalPagamento.style.display = "block";
+  setTimeout(() => metodoPagamentoSelect.focus(), 50);
+});
+
+valorRecebidoInput.addEventListener("input", () => {
+  const restante = extrairValorNumerico(document.getElementById("valorTotalModal"));
+  const recebido = parseFloat(valorRecebidoInput.value) || 0;
+  const troco = recebido - restante;
+
+  valorTrocoTexto.textContent = troco > 0
+    ? `R$ ${troco.toFixed(2)}`
+    : "R$ 0,00";
+  valorTrocoTexto.style.color = troco > 0 ? "#2ecc71" : "#e74c3c";
+});
+
+metodoPagamentoSelect.addEventListener("change", () => {
+  const restante = extrairValorNumerico(document.getElementById("valorTotalModal"));
+  valorRecebidoInput.value = restante.toFixed(2);
+  valorRecebidoInput.dispatchEvent(new Event("input"));
+});
+
+btnConfirmarFinalizacao.addEventListener("click", async () => {
+  const restante = extrairValorNumerico(document.getElementById("valorTotalModal"));
+  const recebido = parseFloat(valorRecebidoInput.value) || 0;
+
+  setTimeout(() => metodoPagamentoSelect.focus(), 50);
+
+  if (recebido <= 0) {
+    showNotificationError("Informe um valor válido.");
+    return;
+  }
+
+  // valor a registrar é só o necessário (sem troco no pagamento parcial)
+  const valorPagamento = Math.min(recebido, restante);
+  pagamentos.push({ metodo: metodoPagamentoSelect.value, valor: valorPagamento });
+
+  const novoRestante = restante - recebido;
+
+  if (novoRestante > 0) {
+    // ainda tem restante — reinicia o modal com o valor que falta
+    document.getElementById("valorTotalModal").textContent = `R$ ${novoRestante.toFixed(2)}`;
+    valorRecebidoInput.value = "";
+    valorTrocoTexto.textContent = "R$ 0,00";
+    metodoPagamentoSelect.value = "DINHEIRO";
+    valorRecebidoInput.readOnly = false;
+    return;
+  }
+
+  // cobriu tudo — finaliza
   const payload = {
-    metodo: metodoPagamentoSelect.value,
-    valorRecebido: recebido
+    pagamentos: pagamentos.map(p => ({ metodo: p.metodo, valor: p.valor }))
   };
 
   try {
     btnConfirmarFinalizacao.disabled = true;
     await apiFinalizarVenda(vendaIdAtual, payload);
     showNotificationSuccess("Venda finalizada com sucesso!");
-    setTimeout(() => {
-      window.location.href = "/pages/awaiting.html";
-    }, 2000);
+    setTimeout(() => window.location.href = "/pages/awaiting.html", 2000);
   } catch (e) {
-    showNotificationError("Erro ao finalizar venda. Por favor, tente novamente.");
+    showNotificationError(e.message || "Erro ao finalizar venda.");
     console.error(e);
     btnConfirmarFinalizacao.disabled = false;
   }
 });
 
-metodoPagamentoSelect.addEventListener("change", () => {
-  if (metodoPagamentoSelect.value !== "DINHEIRO") {
-    const total = extrairValorNumerico(subtotalVenda);
-    valorRecebidoInput.value = total.toFixed(2);
-    valorRecebidoInput.readOnly = true;
-    valorRecebidoInput.dispatchEvent(new Event('input'));
-  } else {
-    valorRecebidoInput.value = "";
-    valorRecebidoInput.readOnly = false;
-    valorRecebidoInput.focus();
-  }
-});
-
 document.addEventListener("keydown", (e) => {
-  if (modalPagamento.style.display === "block") {
-    if (e.key === "Escape") modalPagamento.style.display = "none";
+  const modalAberto = modalPagamento.style.display === "block";
+  const tag = document.activeElement.tagName;
+  const digitandoEmInput = tag === "INPUT" || tag === "TEXTAREA";
+
+  // atalhos fora do modal
+  if (!modalAberto) {
+    if (e.key === "f" || e.key === "F") {
+      if (!digitandoEmInput) {
+        e.preventDefault();
+        btnFinalizarVenda.click();
+      }
+    }
+
+    if (e.key === "c" || e.key === "C") {
+      if (!digitandoEmInput) {
+        e.preventDefault();
+        btnCancelarVenda.click();
+      }
+    }
+  }
+
+  // atalhos dentro do modal
+  if (modalAberto) {
+    if (e.key === "Escape") fecharModalPagamento();
     if (e.key === "Enter") btnConfirmarFinalizacao.click();
   }
 });
