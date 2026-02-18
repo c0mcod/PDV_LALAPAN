@@ -3,6 +3,8 @@ package com.pdv.lalapan.services;
 import com.pdv.lalapan.dto.relatorio.*;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.enums.Categoria;
+import com.pdv.lalapan.exceptions.FaturamentoInvalidoException;
+import com.pdv.lalapan.exceptions.TotalVendasInvalidoException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaItensRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
@@ -181,6 +183,14 @@ public class RelatorioService {
     public IndicadoresFinanceirosDTO calcularIndicadores(LocalDateTime inicio, LocalDateTime fim) {
         BigDecimal faturamento = vendaRepo.calcularFaturamento(inicio,fim);
         Integer totalVendas = vendaRepo.contarVendas(inicio, fim);
+
+        if(faturamento == null) {
+            throw new FaturamentoInvalidoException(faturamento);
+        }
+
+        if(totalVendas == null) {
+            throw new TotalVendasInvalidoException(totalVendas);
+        }
 
         BigDecimal custoTotal = vendaRepo.findByDataHoraFechamentoBetween(inicio, fim)
                 .stream()
