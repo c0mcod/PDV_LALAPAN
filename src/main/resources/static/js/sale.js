@@ -20,7 +20,7 @@ let itensVenda = [];
    ELEMENTOS DO DOM
 ========================= */
 
-const produtoSelect = document.getElementById("produtoSelect");
+const produtoCodigoInput = document.getElementById("produtoCodigoInput");
 const quantidadeInput = document.getElementById("quantidadeInput");
 const precoUnitarioInput = document.getElementById("precoUnitarioInput");
 const precoTotalInput = document.getElementById("precoTotalInput");
@@ -40,7 +40,6 @@ const btnCancelarVenda = document.getElementById("btnCancelarVenda");
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     produtos = await apiGetProducts();
-    carregarSelectProdutos(produtos);
 
     const venda = await apiGetVenda(vendaIdAtual);
 
@@ -61,25 +60,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 /* =========================
-   PRODUTOS - SELECT
+   PRODUTOS - INPUT DE CÓDIGO
 ========================= */
 
-function carregarSelectProdutos(produtos) {
-  produtos.forEach(produto => {
-    const option = document.createElement("option");
-    option.value = produto.id;
-    option.textContent = `${produto.nome}`;
-    produtoSelect.appendChild(option);
-  });
-}
-
-produtoSelect.addEventListener("change", () => {
+produtoCodigoInput.addEventListener("input", () => {
   const produto = obterProdutoSelecionado();
   if (!produto) {
     limparProdutoDestaque();
     return;
   }
   atualizarProdutoDestaque(produto);
+});
+
+produtoCodigoInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") btnAdicionarItem.click();
 });
 
 quantidadeInput.addEventListener("input", () => {
@@ -94,8 +88,8 @@ quantidadeInput.addEventListener("input", () => {
 ========================= */
 
 function obterProdutoSelecionado() {
-  const id = Number(produtoSelect.value);
-  return produtos.find(p => p.id === id);
+  const codigo = produtoCodigoInput.value.trim();
+  return produtos.find(p => p.codigo === codigo);
 }
 
 function atualizarProdutoDestaque(produto) {
@@ -144,6 +138,9 @@ btnAdicionarItem.addEventListener("click", async () => {
     renderizarItens();
     atualizarSubtotal();
     quantidadeInput.value = 1;
+    produtoCodigoInput.value = "";
+    limparProdutoDestaque();
+    produtoCodigoInput.focus();
 
   } catch (e) {
     showNotificationError(e.message);
