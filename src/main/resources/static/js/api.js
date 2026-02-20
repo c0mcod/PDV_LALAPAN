@@ -169,6 +169,17 @@ async function apiCancelarVenda(vendaId) {
   return response.json();
 }
 
+async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size) {
+  let url = `${API_BASE_URL}/historico-vendas?dataInicio=${dataInicio}&dataFim=${dataFim}&page=${page}&size=${size}`;
+  if (operadorId) url += `&operadorId=${operadorId}`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar histórico de vendas");
+  }
+  return response.json();
+}
+
 /* =======================
    RELATÓRIOS
 ======================= */
