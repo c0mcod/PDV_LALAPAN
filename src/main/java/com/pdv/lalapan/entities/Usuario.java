@@ -1,9 +1,6 @@
 package com.pdv.lalapan.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Usuario {
@@ -13,6 +10,9 @@ public class Usuario {
     private Long id;
 
     private String nome;
+
+    @Column(unique = true, nullable = false)
+    private String username;
 
     private Boolean ativo;
 
@@ -40,5 +40,13 @@ public class Usuario {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
