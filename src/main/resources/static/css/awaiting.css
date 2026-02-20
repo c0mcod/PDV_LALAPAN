@@ -10,7 +10,7 @@ body {
     height: 100vh;
     overflow: hidden;
     display: flex;
-    flex-direction: column; /* Organiza Header em cima, resto embaixo */
+    flex-direction: column;
 }
 
 /* --- Cabeçalho --- */
@@ -35,6 +35,37 @@ body {
     border-left: 2px solid rgba(255, 255, 255, 0.3);
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Badge do Operador */
+.operador-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.operador-badge:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.operador-trocar {
+    font-size: 16px;
+    opacity: 0.7;
+}
+
 /* Botão Admin */
 .admin-btn {
     background-color: rgba(255, 255, 255, 0.15);
@@ -56,10 +87,10 @@ body {
 
 /* --- Layout Principal --- */
 .main-container {
-    flex: 1; /* Ocupa todo o espaço restante abaixo do header */
+    flex: 1;
     display: flex;
-    align-items: center; /* Centraliza verticalmente */
-    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;
+    justify-content: center;
     background-color: #ffffff;
 }
 
@@ -106,9 +137,8 @@ body {
     100% { transform: scale(1); opacity: 0; }
 }
 
-/* Tipografia e Ações */
 .venda-card h1 {
-    font-size: 48px; /* Aumentei um pouco para destaque */
+    font-size: 48px;
     font-weight: 300;
     color: #212529;
     margin: 0;
@@ -133,4 +163,73 @@ kbd {
     font-weight: 700;
     color: #212529;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* --- Modal Operador --- */
+.modal-operador-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-operador-overlay.ativo {
+    display: flex;
+}
+
+.modal-operador {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    width: 380px;
+    max-width: 90vw;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.modal-operador h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.modal-operador p {
+    font-size: 14px;
+    color: #868e96;
+    margin-bottom: 24px;
+}
+
+.lista-operadores {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.operador-opcao {
+    padding: 14px 20px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #212529;
+    background: white;
+    transition: all 0.15s;
+    text-align: left;
+}
+
+.operador-opcao:hover {
+    border-color: #2a5298;
+    background-color: #f0f4ff;
+    color: #2a5298;
+}
+
+.operador-loading {
+    color: #868e96;
+    font-size: 14px;
+    padding: 20px 0;
 }

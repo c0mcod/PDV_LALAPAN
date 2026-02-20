@@ -39,6 +39,11 @@ const btnCancelarVenda = document.getElementById("btnCancelarVenda");
 ========================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const operador = JSON.parse(localStorage.getItem("operador"));
+  if (operador) {
+    document.querySelector(".operador-info").textContent = `Atendido por: ${operador.nome}`;
+  }
+
   try {
     produtos = await apiGetProducts();
 
@@ -344,7 +349,7 @@ metodoPagamentoSelect.addEventListener("change", () => {
 
 btnConfirmarFinalizacao.addEventListener("click", async () => {
   const recebido = parseFloat(valorRecebidoInput.value) || 0;
-  
+
   if (recebido <= 0 && restanteAtual > 0) {
     showNotificationError("Informe um valor válido.");
     return;

@@ -1,12 +1,9 @@
 package com.pdv.lalapan.services;
 
-import com.pdv.lalapan.dto.produto.ProdutoResponseDTO;
 import com.pdv.lalapan.dto.usuario.UsuarioAtualizadoDTO;
 import com.pdv.lalapan.dto.usuario.UsuarioCreateDTO;
 import com.pdv.lalapan.dto.usuario.UsuarioResponseDTO;
-import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.entities.Usuario;
-import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
 import com.pdv.lalapan.exceptions.UsuarioNaoEncontradoException;
 import com.pdv.lalapan.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;

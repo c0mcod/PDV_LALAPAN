@@ -78,11 +78,23 @@ async function apiExportarProdutos() {
 }
 
 /* =======================
+   USUÁRIOS
+======================= */
+
+async function apiGetUsuarios() {
+  const response = await fetch(`${API_BASE_URL}/usuarios`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar usuários");
+  }
+  return response.json();
+}
+
+/* =======================
    VENDAS
 ======================= */
 
-async function apiAbrirVenda() {
-  const response = await fetch(`${API_BASE_URL}/venda/abrir`, {
+async function apiAbrirVenda(usuarioId) {
+  const response = await fetch(`${API_BASE_URL}/venda/abrir?usuarioId=${usuarioId}`, {
     method: "POST"
   });
 

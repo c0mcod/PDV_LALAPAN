@@ -14,6 +14,11 @@
         </div>
 
         <div class="header-right">
+            <div id="operadorBadge" class="operador-badge" title="Clique para trocar operador" onclick="abrirModalOperador()">
+                <span class="operador-icone">👤</span>
+                <span id="operadorNome">Carregando...</span>
+                <span class="operador-trocar">↺</span>
+            </div>
             <button id="btnAdmin" class="admin-btn" title="Acesso Administrativo">
                 ⚙️
             </button>
@@ -34,6 +39,17 @@
                     <kbd>Enter</kbd>
                     <span>para iniciar venda</span>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Seleção de Operador -->
+    <div id="modalOperador" class="modal-operador-overlay">
+        <div class="modal-operador">
+            <h2>Selecionar Operador</h2>
+            <p>Quem está operando o caixa agora?</p>
+            <div id="listaOperadores" class="lista-operadores">
+                <div class="operador-loading">Carregando...</div>
             </div>
         </div>
     </div>
