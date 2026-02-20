@@ -20,8 +20,8 @@ public class VendaController {
 
     // ========== CICLO PRINCIPAL ==========
     @PostMapping("/abrir")
-    public ResponseEntity<VendaAberturaDTO> abrirVenda() {
-        VendaAberturaDTO venda = vendaService.iniciarVenda();
+    public ResponseEntity<VendaAberturaDTO> abrirVenda(@RequestParam Long usuarioId) {
+        VendaAberturaDTO venda = vendaService.iniciarVenda(usuarioId);
         return ResponseEntity.ok(venda);
     }
 

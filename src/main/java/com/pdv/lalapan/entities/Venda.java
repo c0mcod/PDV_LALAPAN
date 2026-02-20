@@ -25,6 +25,10 @@ public class Venda {
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
     private List<Pagamento> pagamentos = new ArrayList<>();
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "operador_id", nullable = false)
+    private Usuario operador;
+
     @Enumerated(EnumType.STRING)
     private StatusVenda status;
 
@@ -69,6 +73,14 @@ public class Venda {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public Usuario getOperador() {
+        return operador;
+    }
+
+    public void setOperador(Usuario operador) {
+        this.operador = operador;
     }
 
     public List<Pagamento> getPagamentos() {

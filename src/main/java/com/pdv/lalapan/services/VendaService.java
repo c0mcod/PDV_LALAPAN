@@ -3,13 +3,11 @@ package com.pdv.lalapan.services;
 import com.pdv.lalapan.dto.cancelamento.CancelarItemDTO;
 import com.pdv.lalapan.dto.cancelamento.CancelarVendaDTO;
 import com.pdv.lalapan.dto.venda.*;
-import com.pdv.lalapan.entities.Pagamento;
-import com.pdv.lalapan.entities.Produto;
-import com.pdv.lalapan.entities.Venda;
-import com.pdv.lalapan.entities.VendaItens;
+import com.pdv.lalapan.entities.*;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.exceptions.*;
 import com.pdv.lalapan.repositories.ProdutoRepository;
+import com.pdv.lalapan.repositories.UsuarioRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -25,16 +23,21 @@ public class VendaService {
 
     private final VendaRepository vendaRepo;
     private final ProdutoRepository prodRepo;
+    private final UsuarioRepository userRepo;
 
-    public VendaService(VendaRepository vendaRepo, ProdutoRepository prodRepo) {
+    public VendaService(VendaRepository vendaRepo, ProdutoRepository prodRepo, UsuarioRepository userRepo) {
         this.vendaRepo = vendaRepo;
         this.prodRepo = prodRepo;
+        this.userRepo = userRepo;
     }
 
 
-    public VendaAberturaDTO iniciarVenda() {
+    public VendaAberturaDTO iniciarVenda(Long usuarioId) {
 
-        Optional<Venda> vendaAberta = vendaRepo.findByStatus(StatusVenda.ABERTA);
+        Usuario operador = userRepo.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+
+        Optional<Venda> vendaAberta = vendaRepo.findByStatusAndOperador(StatusVenda.ABERTA, operador);
 
         if (vendaAberta.isPresent()) {
             return new VendaAberturaDTO(vendaAberta.get().getId());
@@ -44,6 +47,7 @@ public class VendaService {
         venda.setDataHoraAbertura(LocalDateTime.now());
         venda.setStatus(StatusVenda.ABERTA);
         venda.setValorTotal(BigDecimal.ZERO);
+        venda.setOperador(operador);
 
         Venda salva = vendaRepo.save(venda);
         return new VendaAberturaDTO(salva.getId());
