@@ -108,10 +108,10 @@ function atualizarProdutoDestaque(produto) {
     return;
   }
   const quantidadeLimitada = Math.round(quantidade * 1000) / 1000;
-  
+
   produtoTitulo.textContent = `${quantidadeLimitada} x ${produto.nome}`;
   precoUnitarioInput.value = `R$ ${produto.preco.toFixed(2)}`;
-  
+
   const total = produto.preco * quantidadeLimitada;
   precoTotalInput.value = `R$ ${total.toFixed(2)}`;
 }
@@ -299,7 +299,7 @@ let pagamentos = [];
 let totalOriginal = 0;
 let restanteAtual = 0;
 
-window.fecharModalPagamento = function() {
+window.fecharModalPagamento = function () {
   modalPagamento.style.display = "none";
   pagamentos = [];
   restanteAtual = 0;
@@ -344,8 +344,8 @@ metodoPagamentoSelect.addEventListener("change", () => {
 
 btnConfirmarFinalizacao.addEventListener("click", async () => {
   const recebido = parseFloat(valorRecebidoInput.value) || 0;
-
-  if (recebido <= 0) {
+  
+  if (recebido <= 0 && restanteAtual > 0) {
     showNotificationError("Informe um valor válido.");
     return;
   }
@@ -353,7 +353,7 @@ btnConfirmarFinalizacao.addEventListener("click", async () => {
   const valorPagamento = Math.min(recebido, restanteAtual);
   pagamentos.push({ metodo: metodoPagamentoSelect.value, valor: valorPagamento });
 
-  restanteAtual = restanteAtual - valorPagamento;
+  restanteAtual = parseFloat((restanteAtual - valorPagamento).toFixed(2));
 
   if (restanteAtual > 0) {
     document.getElementById("valorTotalModal").textContent = `R$ ${restanteAtual.toFixed(2)}`;
