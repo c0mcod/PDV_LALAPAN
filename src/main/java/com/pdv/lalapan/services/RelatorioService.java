@@ -3,8 +3,6 @@ package com.pdv.lalapan.services;
 import com.pdv.lalapan.dto.relatorio.*;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.enums.Categoria;
-import com.pdv.lalapan.exceptions.FaturamentoInvalidoException;
-import com.pdv.lalapan.exceptions.TotalVendasInvalidoException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaItensRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
@@ -35,65 +33,36 @@ public class RelatorioService {
         this.prodRepo = prodRepo;
     }
 
-    public List<KpiDTO> getKpis(String periodo, LocalDate dataInicio, LocalDate dataFim) {
-        LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
-        LocalDateTime dataHoraInicio = datas[0];
-        LocalDateTime dataHoraFim = datas[1];
+    // Retorna apenas o KPI de Produtos Vendidos (único usado pelo front no Card 4)
+    public KpiDTO getProdutosVendidosKpi(String periodo, LocalDate dataInicio, LocalDate dataFim) {
+        LocalDateTime[] datas = resolverPeriodo(periodo, dataInicio, dataFim);
+        LocalDateTime inicio = datas[0];
+        LocalDateTime fim = datas[1];
 
-        List<KpiDTO> kpis = new ArrayList<>();
-
-        long dias = ChronoUnit.DAYS.between(dataHoraInicio.toLocalDate(), dataHoraFim.toLocalDate());
+        long dias = ChronoUnit.DAYS.between(inicio.toLocalDate(), fim.toLocalDate());
         if (dias == 0) dias = 1;
 
-        LocalDateTime periodoAnteriorInicio = dataHoraInicio.minusDays(dias);
-        LocalDateTime periodoAnteriorFim = dataHoraInicio.minusSeconds(1);
+        LocalDateTime periodoAnteriorInicio = inicio.minusDays(dias);
+        LocalDateTime periodoAnteriorFim = inicio.minusSeconds(1);
 
-        // KPI 1: Faturamento
-        BigDecimal faturamento = vendaRepo.calcularFaturamentoPorPeriodo(dataHoraInicio, dataHoraFim);
-        faturamento = faturamento != null ? faturamento : BigDecimal.ZERO;
-
-        BigDecimal faturamentoAnterior = vendaRepo.calcularFaturamentoPorPeriodo(periodoAnteriorInicio, periodoAnteriorFim);
-        faturamentoAnterior = faturamentoAnterior != null ? faturamentoAnterior : BigDecimal.ZERO;
-
-        BigDecimal percentualFaturamento = calcularPercentual(faturamento, faturamentoAnterior);
-        kpis.add(new KpiDTO("Faturamento", formatarValor(faturamento), percentualFaturamento));
-
-        // KPI 2: Vendas
-        Long vendas = vendaRepo.contarVendasPorPeriodo(dataHoraInicio, dataHoraFim);
-        vendas = vendas != null ? vendas : 0L;
-
-        Long vendasAnterior = vendaRepo.contarVendasPorPeriodo(periodoAnteriorInicio, periodoAnteriorFim);
-        vendasAnterior = vendasAnterior != null ? vendasAnterior : 0L;
-
-        BigDecimal percentualVendas = calcularPercentual(vendas, vendasAnterior);
-        kpis.add(new KpiDTO("Vendas", vendas.toString(), percentualVendas));
-
-        // KPI 3: Produtos Vendidos
-        Long produtosVendidos = vendaRepo.contarProdutosVendidos(dataHoraInicio, dataHoraFim);
+        Long produtosVendidos = vendaRepo.contarProdutosVendidos(inicio, fim);
         produtosVendidos = produtosVendidos != null ? produtosVendidos : 0L;
 
         Long produtosVendidosAnterior = vendaRepo.contarProdutosVendidos(periodoAnteriorInicio, periodoAnteriorFim);
         produtosVendidosAnterior = produtosVendidosAnterior != null ? produtosVendidosAnterior : 0L;
 
-        BigDecimal percentualProdutos = calcularPercentual(produtosVendidos, produtosVendidosAnterior);
-        kpis.add(new KpiDTO("Produtos Vendidos", produtosVendidos.toString(), percentualProdutos));
+        BigDecimal percentual = calcularPercentual(produtosVendidos, produtosVendidosAnterior);
 
-        // KPI 4: Transações por Hora
-        Long transacoesPorHora = calcularTransacoesPorHora(vendas, dias);
-        Long transacoesPorHoraAnterior = calcularTransacoesPorHora(vendasAnterior, dias);
-        BigDecimal percentualTransacoes = calcularPercentual(transacoesPorHora, transacoesPorHoraAnterior);
-        kpis.add(new KpiDTO("Transações/Hora", transacoesPorHora.toString(), percentualTransacoes));
-
-        return kpis;
+        return new KpiDTO("Produtos Vendidos", produtosVendidos.toString(), percentual);
     }
 
     // Vendas por dia da semana
     public List<VendasDiaSemanaDTO> getVendasPorDiaSemana(String periodo, LocalDate dataInicio, LocalDate dataFim) {
-        LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
-        LocalDateTime dataHoraInicio = datas[0];
-        LocalDateTime dataHoraFim = datas[1];
+        LocalDateTime[] datas = resolverPeriodo(periodo, dataInicio, dataFim);
+        LocalDateTime inicio = datas[0];
+        LocalDateTime fim = datas[1];
 
-        List<Object[]> resultado = vendaRepo.vendasPorDiaSemana(dataHoraInicio, dataHoraFim);
+        List<Object[]> resultado = vendaRepo.vendasPorDiaSemana(inicio, fim);
 
         Map<Integer, BigDecimal> vendaPorDia = new HashMap<>();
         for (Object[] row : resultado) {
@@ -113,14 +82,14 @@ public class RelatorioService {
         return lista;
     }
 
-    // Top 5 produtos mais vendidos
+    // Top N produtos mais vendidos
     public List<TopProdutoDTO> getTopProdutos(String periodo, LocalDate dataInicio, LocalDate dataFim, int limite) {
-        LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
-        LocalDateTime dataHoraInicio = datas[0];
-        LocalDateTime dataHoraFim = datas[1];
+        LocalDateTime[] datas = resolverPeriodo(periodo, dataInicio, dataFim);
+        LocalDateTime inicio = datas[0];
+        LocalDateTime fim = datas[1];
 
         Pageable pageable = PageRequest.of(0, limite);
-        List<Object[]> resultado = itensRepo.topProdutosMaisVendidos(dataHoraInicio, dataHoraFim, pageable);
+        List<Object[]> resultado = itensRepo.topProdutosMaisVendidos(inicio, fim, pageable);
 
         List<TopProdutoDTO> topProdutos = new ArrayList<>();
         int posicao = 1;
@@ -138,11 +107,11 @@ public class RelatorioService {
 
     // Vendas por categoria
     public List<CategoriaSalesDTO> getVendasPorCategoria(String periodo, LocalDate dataInicio, LocalDate dataFim) {
-        LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
-        LocalDateTime dataHoraInicio = datas[0];
-        LocalDateTime dataHoraFim = datas[1];
+        LocalDateTime[] datas = resolverPeriodo(periodo, dataInicio, dataFim);
+        LocalDateTime inicio = datas[0];
+        LocalDateTime fim = datas[1];
 
-        List<Object[]> resultado = itensRepo.vendasPorCategoria(dataHoraInicio, dataHoraFim);
+        List<Object[]> resultado = itensRepo.vendasPorCategoria(inicio, fim);
 
         BigDecimal totalGeral = resultado.stream()
                 .map(row -> (BigDecimal) row[1])
@@ -165,6 +134,7 @@ public class RelatorioService {
         return categorias;
     }
 
+    // Resumo de estoque
     public EstoqueResumoDTO gerarResumo() {
         List<Produto> produtosAtivos = prodRepo.findByAtivoTrue();
 
@@ -180,42 +150,43 @@ public class RelatorioService {
         return new EstoqueResumoDTO(valorTotal, criticos, baixos, totalAtivos, ok);
     }
 
-    public IndicadoresFinanceirosDTO calcularIndicadores(LocalDateTime inicio, LocalDateTime fim) {
-        BigDecimal faturamento = vendaRepo.calcularFaturamento(inicio,fim);
+    // Indicadores financeiros (Faturamento, Lucro Bruto, Ticket Médio, Total Vendas)
+    public IndicadoresFinanceirosDTO calcularIndicadoresPorPeriodo(String periodo, LocalDate dataInicio, LocalDate dataFim) {
+        LocalDateTime[] datas = resolverPeriodo(periodo, dataInicio, dataFim);
+        LocalDateTime inicio = datas[0];
+        LocalDateTime fim = datas[1];
+
+        BigDecimal faturamento = vendaRepo.calcularFaturamento(inicio, fim);
+        faturamento = faturamento != null ? faturamento : BigDecimal.ZERO;
+
         Integer totalVendas = vendaRepo.contarVendas(inicio, fim);
-
-        if(faturamento == null) {
-            throw new FaturamentoInvalidoException(faturamento);
-        }
-
-        if(totalVendas == null) {
-            throw new TotalVendasInvalidoException(totalVendas);
-        }
+        totalVendas = totalVendas != null ? totalVendas : 0;
 
         BigDecimal custoTotal = vendaRepo.findByDataHoraFechamentoBetween(inicio, fim)
                 .stream()
                 .flatMap(v -> v.getItens().stream())
-                .map(item -> item.getProduto().getPrecoCusto()
-                        .multiply(item.getQuantidade()))
+                .map(item -> item.getProduto().getPrecoCusto().multiply(item.getQuantidade()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal lucro  = faturamento.subtract(custoTotal);
+        BigDecimal lucroBruto = faturamento.subtract(custoTotal);
+
         BigDecimal ticketMedio = totalVendas > 0
                 ? faturamento.divide(BigDecimal.valueOf(totalVendas), 2, RoundingMode.HALF_UP)
                 : BigDecimal.ZERO;
 
-        return new IndicadoresFinanceirosDTO(faturamento, lucro, ticketMedio, totalVendas);
-    }
-
-    public IndicadoresFinanceirosDTO calcularIndicadoresPorPeriodo(String periodo) {
-        LocalDateTime[] datas = calcularPeriodo(periodo);
-        LocalDateTime inicio = datas[0];
-        LocalDateTime fim = datas[1];
-
-        return calcularIndicadores(inicio, fim);
+        return new IndicadoresFinanceirosDTO(faturamento, lucroBruto, ticketMedio, totalVendas);
     }
 
     // Métodos auxiliares
+    private LocalDateTime[] resolverPeriodo(String periodo, LocalDate dataInicio, LocalDate dataFim) {
+        // Se vieram datas customizadas, usa elas
+        if (dataInicio != null && dataFim != null) {
+            return new LocalDateTime[]{dataInicio.atStartOfDay(), dataFim.atTime(23, 59, 59)};
+        }
+        // Senão, calcula pelo período
+        return calcularPeriodo(periodo);
+    }
+
     private BigDecimal calcularPercentual(Number valorAtual, Number valorAnterior) {
         if (valorAnterior == null || valorAnterior.doubleValue() == 0) {
             return BigDecimal.ZERO;
@@ -229,46 +200,12 @@ public class RelatorioService {
                 .multiply(BigDecimal.valueOf(100));
     }
 
-    private Long calcularTransacoesPorHora(Long vendas, long dias) {
-        if (vendas == null || dias == 0) return 0L;
-        long horas = dias * 24;
-        return vendas / horas;
-    }
-
-    private String formatarValor(BigDecimal valor) {
-        if (valor == null) return "R$ 0";
-
-        if (valor.compareTo(BigDecimal.valueOf(1000)) >= 0) {
-            BigDecimal valorEmK = valor.divide(BigDecimal.valueOf(1000), 1, RoundingMode.HALF_UP);
-            return "R$ " + valorEmK + "K";
-        }
-
-        return "R$ " + valor;
-    }
-
-    private LocalDateTime[] processarPeriodo(String periodo, LocalDate dataInicio, LocalDate dataFim) {
-        if (periodo != null) {
-            return calcularPeriodo(periodo);
-        }
-
-        if (dataInicio == null || dataFim == null) {
-            LocalDate hoje = LocalDate.now();
-            LocalDateTime inicio = hoje.minusDays(30).atStartOfDay();
-            LocalDateTime fim = hoje.atTime(23, 59, 59);
-            return new LocalDateTime[]{inicio, fim};
-        }
-
-        LocalDateTime inicio = dataInicio.atStartOfDay();
-        LocalDateTime fim = dataFim.atTime(23, 59, 59);
-        return new LocalDateTime[]{inicio, fim};
-    }
-
     private LocalDateTime[] calcularPeriodo(String periodo) {
         LocalDate hoje = LocalDate.now();
         LocalDate inicio;
         LocalDate fim = hoje;
 
-        switch (periodo.toUpperCase()) {
+        switch (periodo != null ? periodo.toUpperCase() : "ULTIMOS_30_DIAS") {
             case "HOJE":
                 inicio = hoje;
                 break;
@@ -292,10 +229,6 @@ public class RelatorioService {
                 inicio = hoje.minusDays(30);
         }
 
-        // Converter para LocalDateTime
-        LocalDateTime dataHoraInicio = inicio.atStartOfDay();
-        LocalDateTime dataHoraFim = fim.atTime(23, 59, 59);
-
-        return new LocalDateTime[]{dataHoraInicio, dataHoraFim};
+        return new LocalDateTime[]{inicio.atStartOfDay(), fim.atTime(23, 59, 59)};
     }
 }

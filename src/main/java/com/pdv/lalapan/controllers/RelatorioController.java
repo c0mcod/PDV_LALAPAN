@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,13 +19,12 @@ public class RelatorioController {
     private RelatorioService relatorioService;
 
     @GetMapping("/kpis")
-    public ResponseEntity<List<KpiDTO>> getKpis(
+    public ResponseEntity<KpiDTO> getProdutosVendidosKpi(
             @RequestParam(required = false) String periodo,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim
     ) {
-        List<KpiDTO> kpis = relatorioService.getKpis(periodo, dataInicio, dataFim);
-        return ResponseEntity.ok(kpis);
+        return ResponseEntity.ok(relatorioService.getProdutosVendidosKpi(periodo, dataInicio, dataFim));
     }
 
     @GetMapping("/vendas-dia-semana")
@@ -35,8 +33,7 @@ public class RelatorioController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim
     ) {
-        List<VendasDiaSemanaDTO> vendas = relatorioService.getVendasPorDiaSemana(periodo, dataInicio, dataFim);
-        return ResponseEntity.ok(vendas);
+        return ResponseEntity.ok(relatorioService.getVendasPorDiaSemana(periodo, dataInicio, dataFim));
     }
 
     @GetMapping("/top-produtos")
@@ -46,8 +43,7 @@ public class RelatorioController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim,
             @RequestParam(defaultValue = "5") int limite
     ) {
-        List<TopProdutoDTO> topProdutos = relatorioService.getTopProdutos(periodo, dataInicio, dataFim, limite);
-        return ResponseEntity.ok(topProdutos);
+        return ResponseEntity.ok(relatorioService.getTopProdutos(periodo, dataInicio, dataFim, limite));
     }
 
     @GetMapping("/vendas-categoria")
@@ -56,8 +52,7 @@ public class RelatorioController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim
     ) {
-        List<CategoriaSalesDTO> vendas = relatorioService.getVendasPorCategoria(periodo, dataInicio, dataFim);
-        return ResponseEntity.ok(vendas);
+        return ResponseEntity.ok(relatorioService.getVendasPorCategoria(periodo, dataInicio, dataFim));
     }
 
     @GetMapping("/resumo-estoque")
@@ -67,7 +62,10 @@ public class RelatorioController {
 
     @GetMapping("/indicadores-financeiros")
     public ResponseEntity<IndicadoresFinanceirosDTO> getIndicadores(
-            @RequestParam String periodo) {
-        return ResponseEntity.ok(relatorioService.calcularIndicadoresPorPeriodo(periodo));
+            @RequestParam(required = false) String periodo,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim
+    ) {
+        return ResponseEntity.ok(relatorioService.calcularIndicadoresPorPeriodo(periodo, dataInicio, dataFim));
     }
 }
