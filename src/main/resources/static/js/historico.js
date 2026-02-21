@@ -133,6 +133,7 @@ function renderizarTabela(vendas) {
             <td>${formatarDataHora(v.dataHoraAbertura)}</td>
             <td>${v.operadorNome}</td>
             <td><span class="price-value">R$ ${v.valorTotal.toFixed(2)}</span></td>
+            <td><button class="btn-action btn-ver" onclick="abrirDetalhes(${v.vendaId})">Ver</button></td>
         </tr>
     `).join("");
 }
@@ -183,6 +184,61 @@ function atualizarStats(vendas, total) {
         document.getElementById("statValorTotal").textContent = "R$ 0,00";
         document.getElementById("statTicketMedio").textContent = "R$ 0,00";
     }
+}
+
+/* =========================
+   MODAL DE DETALHES
+========================= */
+
+async function abrirDetalhes(vendaId) {
+    const modal = document.getElementById("modalDetalhes");
+    const conteudo = document.getElementById("modalDetalhesConteudo");
+
+    conteudo.innerHTML = `<p class="detalhes-loading">Carregando...</p>`;
+    modal.style.display = "flex";
+
+    try {
+        const v = await apiGetDetalhesVenda(vendaId);
+
+        conteudo.innerHTML = `
+            <div class="detalhes-header-info">
+                <div class="detalhe-item"><span>Operador</span><strong>${v.operador}</strong></div>
+                <div class="detalhe-item"><span>Abertura</span><strong>${formatarDataHora(v.dataHoraAbertura)}</strong></div>
+                <div class="detalhe-item"><span>Fechamento</span><strong>${formatarDataHora(v.dataHoraFechamento)}</strong></div>
+            </div>
+            <table class="detalhes-table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd.</th>
+                        <th>Preço Unit.</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${v.itens.map(item => `
+                        <tr>
+                            <td>${item.nome}</td>
+                            <td>${item.quantidade.toFixed(3)}</td>
+                            <td>R$ ${item.precoUnitario.toFixed(2)}</td>
+                            <td><strong>R$ ${item.subtotal.toFixed(2)}</strong></td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+            <div class="detalhes-total">
+                <span>Total da Venda</span>
+                <span class="price-value">R$ ${v.valorTotal.toFixed(2)}</span>
+            </div>
+        `;
+    } catch (e) {
+        conteudo.innerHTML = `<p class="detalhes-loading">Erro ao carregar detalhes.</p>`;
+        console.error(e);
+    }
+}
+
+function fecharModalDetalhes() {
+    document.getElementById("modalDetalhes").style.display = "none";
 }
 
 /* =========================

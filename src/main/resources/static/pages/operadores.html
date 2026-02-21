@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LalaPDV - Operadores</title>
+    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/modalResponses.css">
+    <link rel="stylesheet" href="../css/operadores.css">
+</head>
+
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">LalaPDV</div>
+            <div class="page-title">Gerenciamento de Operadores</div>
+        </div>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="main-container">
+
+        <!-- Painel Esquerdo -->
+        <div class="left-banner">
+            <button class="toggle-menu-btn" id="toggleMenu">
+                <span class="toggle-icon">
+                    <svg><use href="../assets/icons.svg#icon-menu"></use></svg> Menu
+                </span>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="../pages/awaiting.html" class="nav-item">
+                    <svg class="nav-icon"><use href="../assets/icons.svg#icon-pdv"></use></svg>
+                    <span class="nav-label">PDV</span>
+                </a>
+                <a href="../pages/inventory.html" class="nav-item">
+                    <svg class="nav-icon"><use href="../assets/icons.svg#icon-box"></use></svg>
+                    <span class="nav-label">Estoque</span>
+                </a>
+                <a href="../pages/reports.html" class="nav-item">
+                    <svg class="nav-icon"><use href="../assets/icons.svg#icon-reports"></use></svg>
+                    <span class="nav-label">Relatórios</span>
+                </a>
+                <a href="../pages/historico.html" class="nav-item">
+                    <svg class="nav-icon"><use href="../assets/icons.svg#icon-historico"></use></svg>
+                    <span class="nav-label">Histórico</span>
+                </a>
+                <a href="../pages/operadores.html" class="nav-item active">
+                    <svg class="nav-icon"><use href="../assets/icons.svg#icon-users"></use></svg>
+                    <span class="nav-label">Operadores</span>
+                </a>
+            </nav>
+
+            <div class="banner-content">
+                <svg class="banner-logo">
+                    <use href="../assets/icons.svg#icon-users"></use>
+                </svg>
+                <div class="banner-title">OPERADORES</div>
+                <div class="banner-subtitle">Gestão</div>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-label">Total de Operadores</div>
+                    <div class="stat-value" id="statTotal">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Ativos</div>
+                    <div class="stat-value" id="statAtivos">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Inativos</div>
+                    <div class="stat-value" id="statInativos">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel Direito -->
+        <div class="right-panel">
+
+            <div class="toolbar">
+                <div class="search-section">
+                    <input type="text" class="search-box" id="searchBox" placeholder="Buscar operador por nome ou usuário...">
+                </div>
+                <div class="filtro-group">
+                    <select id="filtroStatus" class="filtro-input">
+                        <option value="todos">Todos</option>
+                        <option value="ativos">Ativos</option>
+                        <option value="inativos">Inativos</option>
+                    </select>
+                </div>
+                <div class="toolbar-actions">
+                    <button class="btn-toolbar btn-novo" id="btnNovoOperador">
+                        <svg><use href="../assets/icons.svg#icon-new-product"></use></svg> Novo Operador
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaOperadores"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Criar/Editar Operador -->
+    <div id="modalOperador" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalOperadorTitulo">Novo Operador</h2>
+                <button class="modal-close" id="btnFecharModal">&times;</button>
+            </div>
+            <form id="formOperador">
+                <input type="hidden" id="operadorId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome *</label>
+                        <input type="text" id="operadorNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Username *</label>
+                        <input type="text" id="operadorUsername" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" id="btnCancelarModal">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Erro -->
+    <div id="notificationErrorModal" class="notification-modal-overlay" style="display: none;">
+        <div class="notification-modal-content">
+            <div class="notification-modal-icon notification-error-icon">
+                <svg><use href="../assets/icons.svg#icon-error"></use></svg>
+            </div>
+            <h3>Erro</h3>
+            <p id="notificationErrorMessage"></p>
+            <button class="notification-btn-error" onclick="closeNotificationErrorModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="notificationSuccessModal" class="notification-modal-overlay" style="display: none;">
+        <div class="notification-modal-content">
+            <div class="notification-modal-icon notification-success-icon">
+                <svg><use href="../assets/icons.svg#icon-ok"></use></svg>
+            </div>
+            <h3>Sucesso</h3>
+            <p id="notificationSuccessMessage"></p>
+            <button class="notification-btn-success" onclick="closeNotificationSuccessModal()">Ok</button>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/operadores.js"></script>
+</body>
+
+</html>

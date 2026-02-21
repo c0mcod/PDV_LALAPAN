@@ -169,6 +169,14 @@ async function apiCancelarVenda(vendaId) {
   return response.json();
 }
 
+async function apiGetDetalhesVenda(vendaId) {
+  const response = await fetch(`${API_BASE_URL}/historico-vendas/detalhes/${vendaId}`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar detalhes da venda");
+  }
+  return response.json();
+}
+
 async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size) {
   let url = `${API_BASE_URL}/historico-vendas?dataInicio=${dataInicio}&dataFim=${dataFim}&page=${page}&size=${size}`;
   if (operadorId) url += `&operadorId=${operadorId}`;

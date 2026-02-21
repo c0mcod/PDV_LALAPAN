@@ -50,6 +50,9 @@
             </nav>
 
             <div class="banner-content">
+                <svg class="banner-logo">
+                    <use href="../assets/icons.svg#icon-historico"></use>
+                </svg>
                 <div class="banner-title">VENDAS</div>
                 <div class="banner-subtitle">Histórico</div>
             </div>
@@ -140,6 +143,17 @@
             <h3>Erro</h3>
             <p id="notificationErrorMessage"></p>
             <button class="notification-btn-error" onclick="closeNotificationErrorModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes da Venda -->
+    <div id="modalDetalhes" class="modal-detalhes-overlay" style="display: none;">
+        <div class="modal-detalhes">
+            <div class="modal-detalhes-header">
+                <h2>Detalhes da Venda</h2>
+                <button class="modal-close" onclick="fecharModalDetalhes()">×</button>
+            </div>
+            <div id="modalDetalhesConteudo" class="modal-detalhes-body"></div>
         </div>
     </div>
 
