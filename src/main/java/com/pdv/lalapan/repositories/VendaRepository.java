@@ -86,4 +86,13 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
             @Param("operadorId") Long operadorId,
             Pageable pageable
     );
+
+    @Query("""
+    select v from Venda v
+    join fetch v.itens i
+    join fetch v.operador
+    where v.id = :id
+""")
+    Optional<Venda> buscarDetalhe(@Param("id") Long id);
+
 }

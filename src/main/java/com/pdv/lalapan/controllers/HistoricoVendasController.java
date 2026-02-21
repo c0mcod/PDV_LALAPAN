@@ -1,15 +1,13 @@
 package com.pdv.lalapan.controllers;
 
 import com.pdv.lalapan.dto.historicoVendas.HistoricoVendasResponseDTO;
+import com.pdv.lalapan.dto.historicoVendas.VendaDetalheDTO;
 import com.pdv.lalapan.services.HistoricoVendasService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -31,5 +29,11 @@ public class HistoricoVendasController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(historicoService.buscarHistorico(dataInicio, dataFim, operadorId, pageable));
+    }
+
+    @GetMapping("/detalhes/{id}")
+    public ResponseEntity<VendaDetalheDTO> gerarDetalhes(@PathVariable Long id) {
+        VendaDetalheDTO response = historicoService.buscarDetalhes(id);
+        return ResponseEntity.ok().body(response);
     }
 }
