@@ -1,20 +1,47 @@
 // Carregar dados ao abrir a página
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     carregarRelatorios('ULTIMOS_30_DIAS');
-    
-    // Adicionar eventos nos botões de filtro
-    const botoesFiltro = document.querySelectorAll('.filter-btn');
+
+    const botoesFiltro = document.querySelectorAll('.filter-btn:not(#btnPersonalizado)');
+    const btnPersonalizado = document.getElementById('btnPersonalizado');
+    const customDatePanel = document.getElementById('customDatePanel');
+    const btnAplicarDatas = document.getElementById('btnAplicarDatas');
+
+    // Botões de período fixo
     botoesFiltro.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active de todos
+        btn.addEventListener('click', function () {
             botoesFiltro.forEach(b => b.classList.remove('active'));
-            // Adiciona active no clicado
+            btnPersonalizado.classList.remove('active');
+            customDatePanel.classList.remove('visible');
+
             this.classList.add('active');
-            
-            // Pega o texto do botão e converte pro formato da API
-            const periodo = converterPeriodo(this.textContent);
-            carregarRelatorios(periodo);
+            carregarRelatorios(converterPeriodo(this.textContent));
         });
+    });
+
+    // Botão Personalizado — abre/fecha o painel
+    btnPersonalizado.addEventListener('click', function () {
+        botoesFiltro.forEach(b => b.classList.remove('active'));
+        btnPersonalizado.classList.add('active');
+        customDatePanel.classList.toggle('visible');
+    });
+
+    // Botão Aplicar
+    btnAplicarDatas.addEventListener('click', function () {
+        const dataInicio = document.getElementById('dataInicio').value;
+        const dataFim = document.getElementById('dataFim').value;
+
+        if (!dataInicio || !dataFim) {
+            showNotificationError('Preencha as duas datas para aplicar o filtro.');
+            return;
+        }
+
+        if (dataInicio > dataFim) {
+            showNotificationError('A data de início não pode ser maior que a data fim.');
+            return;
+        }
+
+        carregarRelatoriosPersonalizado(dataInicio, dataFim);
     });
 });
 
@@ -32,85 +59,107 @@ function converterPeriodo(textoBotao) {
 
 async function carregarRelatorios(periodo) {
     try {
-        // Carregar todos os dados em paralelo
-        const [kpis, vendasDiaSemana, topProdutos, vendasCategoria, indicadores, resumoEstoque] = await Promise.all([
-            apiGetKpis(periodo),
+        const [produtosVendidosKpi, vendasDiaSemana, topProdutos, vendasCategoria, indicadores, resumoEstoque] = await Promise.all([
+            apiGetProdutosVendidosKpi(periodo),
             apiGetVendasDiaSemana(periodo),
             apiGetTopProdutos(periodo, 5),
             apiGetVendasCategoria(periodo),
             apiGetIndicadoresFinanceiros(periodo),
             apiGetResumoEstoque()
         ]);
-        
-        // Atualizar cada seção
-        atualizarKPIs(kpis, indicadores);
+
+        atualizarKPIs(produtosVendidosKpi, indicadores);
         atualizarVendasDiaSemana(vendasDiaSemana);
         atualizarTopProdutos(topProdutos);
         atualizarVendasCategoria(vendasCategoria);
         atualizarResumoEstoque(resumoEstoque);
-        
+
     } catch (error) {
         console.error('Erro ao carregar relatórios:', error);
         showNotificationError('Ocorreu um erro ao carregar os relatórios. Por favor, tente novamente mais tarde.');
     }
 }
 
-function atualizarKPIs(kpis, indicadores) {
-    // Atualizar os 4 cards originais
+async function carregarRelatoriosPersonalizado(dataInicio, dataFim) {
+    try {
+        const [produtosVendidosKpi, vendasDiaSemana, topProdutos, vendasCategoria, indicadores, resumoEstoque] = await Promise.all([
+            apiGetProdutosVendidosKpiPorData(dataInicio, dataFim),
+            apiGetVendasDiasemanaPorData(dataInicio, dataFim),
+            apiGetTopProdutosPorData(dataInicio, dataFim, 5),
+            apiGetVendasCategoriaPorData(dataInicio, dataFim),
+            apiGetIndicadoresFinanceirosPorData(dataInicio, dataFim),
+            apiGetResumoEstoque()
+        ]);
+
+        atualizarKPIs(produtosVendidosKpi, indicadores);
+        atualizarVendasDiaSemana(vendasDiaSemana);
+        atualizarTopProdutos(topProdutos);
+        atualizarVendasCategoria(vendasCategoria);
+        atualizarResumoEstoque(resumoEstoque);
+
+    } catch (error) {
+        console.error('Erro ao carregar relatórios:', error);
+        showNotificationError('Ocorreu um erro ao carregar os relatórios. Por favor, tente novamente mais tarde.');
+    }
+}
+
+
+
+function atualizarKPIs(produtosVendidosKpi, indicadores) {
     const cards = document.querySelectorAll('.kpi-card');
-    
-    // Card 1: Faturamento (do indicadores)
+
+    // Card 1: Faturamento
     if (cards[0]) {
         const valueEl = cards[0].querySelector('.kpi-value');
         const changeEl = cards[0].querySelector('.kpi-change');
-        
+
         valueEl.textContent = formatarValor(indicadores.faturamentoTotal);
         changeEl.textContent = `${indicadores.totalVendas} vendas realizadas`;
         changeEl.className = 'kpi-change change-neutral';
     }
-    
-    // Card 2: Lucro Bruto (NOVO)
+
+    // Card 2: Lucro Bruto
     if (cards[1]) {
         const labelEl = cards[1].querySelector('.kpi-label');
         const valueEl = cards[1].querySelector('.kpi-value');
         const changeEl = cards[1].querySelector('.kpi-change');
         const iconEl = cards[1].querySelector('.kpi-icon');
-        
+
         labelEl.textContent = 'Lucro Bruto';
         iconEl.innerHTML = '<svg><use href="../assets/icons.svg#icon-bag-money"></use></svg>';
         valueEl.textContent = formatarValor(indicadores.lucroBruto);
-        
-        const margemLucro = indicadores.faturamentoTotal > 0 
+
+        const margemLucro = indicadores.faturamentoTotal > 0
             ? (indicadores.lucroBruto / indicadores.faturamentoTotal * 100).toFixed(1)
             : 0;
         changeEl.textContent = `Margem: ${margemLucro}%`;
         changeEl.className = 'kpi-change change-neutral';
     }
-    
-    // Card 3: Ticket Médio (NOVO)
+
+    // Card 3: Ticket Médio
     if (cards[2]) {
         const labelEl = cards[2].querySelector('.kpi-label');
         const valueEl = cards[2].querySelector('.kpi-value');
         const changeEl = cards[2].querySelector('.kpi-change');
         const iconEl = cards[2].querySelector('.kpi-icon');
-        
+
         labelEl.textContent = 'Ticket Médio';
         iconEl.innerHTML = '<svg><use href="../assets/icons.svg#icon-ticket"></use></svg>';
         valueEl.textContent = formatarValor(indicadores.ticketMedio);
-        changeEl.textContent = `Por venda realizada`;
+        changeEl.textContent = 'Por venda realizada';
         changeEl.className = 'kpi-change change-neutral';
     }
-    
-    // Card 4: Mantém original (Produtos Vendidos ou Transações/Hora)
-    if (cards[3] && kpis[2]) {
+
+    // Card 4: Produtos Vendidos
+    if (cards[3]) {
         const valueEl = cards[3].querySelector('.kpi-value');
         const changeEl = cards[3].querySelector('.kpi-change');
-        
-        valueEl.textContent = kpis[2].valor;
-        
-        const sinal = kpis[2].percentualMudanca >= 0 ? '↑' : '↓';
-        const classe = kpis[2].percentualMudanca >= 0 ? 'change-positive' : 'change-negative';
-        changeEl.textContent = `${sinal} ${Math.abs(kpis[2].percentualMudanca).toFixed(1)}% vs mês anterior`;
+
+        valueEl.textContent = produtosVendidosKpi.valor;
+
+        const sinal = produtosVendidosKpi.percentualMudanca >= 0 ? '↑' : '↓';
+        const classe = produtosVendidosKpi.percentualMudanca >= 0 ? 'change-positive' : 'change-negative';
+        changeEl.textContent = `${sinal} ${Math.abs(produtosVendidosKpi.percentualMudanca).toFixed(1)}% vs período anterior`;
         changeEl.className = `kpi-change ${classe}`;
     }
 }
@@ -120,11 +169,11 @@ let vendasChart = null;
 function atualizarVendasDiaSemana(vendas) {
     const ctx = document.getElementById('vendasChart');
     if (!ctx) return;
-    
+
     if (vendasChart) {
         vendasChart.destroy();
     }
-        
+
     vendasChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -142,13 +191,13 @@ function atualizarVendasDiaSemana(vendas) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { 
-                    display: false 
+                legend: {
+                    display: false
                 },
                 tooltip: {
                     enabled: true,
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return 'R$ ' + context.parsed.y.toFixed(2);
                         }
                     }
@@ -162,10 +211,8 @@ function atualizarVendasDiaSemana(vendas) {
                         color: 'rgba(0, 0, 0, 0.05)'
                     },
                     ticks: {
-                        font: {
-                            size: 12
-                        },
-                        callback: function(value) {
+                        font: { size: 12 },
+                        callback: function (value) {
                             if (value >= 1000) {
                                 return 'R$ ' + (value / 1000).toFixed(1) + 'K';
                             }
@@ -174,14 +221,9 @@ function atualizarVendasDiaSemana(vendas) {
                     }
                 },
                 x: {
-                    grid: {
-                        display: false
-                    },
+                    grid: { display: false },
                     ticks: {
-                        font: {
-                            size: 12,
-                            weight: '600'
-                        }
+                        font: { size: 12, weight: '600' }
                     }
                 }
             }
@@ -189,11 +231,10 @@ function atualizarVendasDiaSemana(vendas) {
     });
 }
 
-
 function atualizarTopProdutos(produtos) {
     const container = document.querySelector('.top-products');
     if (!container) return;
-    
+
     container.innerHTML = produtos.map(produto => `
         <div class="product-item">
             <div class="product-rank">${produto.posicao}º</div>
@@ -209,11 +250,11 @@ function atualizarTopProdutos(produtos) {
 function atualizarVendasCategoria(categorias) {
     const container = document.querySelector('.category-table');
     if (!container) return;
-    
+
     const header = container.querySelector('.category-row.header');
     container.innerHTML = '';
     if (header) container.appendChild(header);
-    
+
     categorias.forEach(cat => {
         const row = document.createElement('div');
         row.className = 'category-row';
@@ -229,7 +270,7 @@ function atualizarVendasCategoria(categorias) {
 function atualizarResumoEstoque(resumo) {
     const container = document.querySelector('.stock-summary');
     if (!container) return;
-    
+
     container.innerHTML = `
         <div class="stock-card total">
             <div class="stock-icon"><svg><use href="../assets/icons.svg#icon-bag-money"></use></svg></div>

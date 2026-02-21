@@ -192,11 +192,41 @@ async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size
    RELATÓRIOS
 ======================= */
 
-async function apiGetKpis(periodo) {
+async function apiGetProdutosVendidosKpi(periodo) {
   const response = await fetch(`${API_BASE_URL}/api/relatorios/kpis?periodo=${periodo}`);
   if(!response.ok) {
-    throw new Error("Erro ao buscar KPIs");
+    throw new Error("Erro ao buscar KPI de produtos vendidos");
   }
+  return response.json();
+}
+
+async function apiGetProdutosVendidosKpiPorData(dataInicio, dataFim) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/kpis?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+  if(!response.ok) throw new Error("Erro ao buscar KPI de produtos vendidos");
+  return response.json();
+}
+
+async function apiGetVendasDiasemanaPorData(dataInicio, dataFim) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-dia-semana?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+  if(!response.ok) throw new Error("Erro ao buscar vendas por dia");
+  return response.json();
+}
+
+async function apiGetTopProdutosPorData(dataInicio, dataFim, limite = 5) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/top-produtos?dataInicio=${dataInicio}&dataFim=${dataFim}&limite=${limite}`);
+  if(!response.ok) throw new Error("Erro ao buscar top produtos");
+  return response.json();
+}
+
+async function apiGetVendasCategoriaPorData(dataInicio, dataFim) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-categoria?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+  if(!response.ok) throw new Error("Erro ao buscar vendas por categoria");
+  return response.json();
+}
+
+async function apiGetIndicadoresFinanceirosPorData(dataInicio, dataFim) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/indicadores-financeiros?dataInicio=${dataInicio}&dataFim=${dataFim}`);
+  if(!response.ok) throw new Error("Erro ao buscar indicadores financeiros");
   return response.json();
 }
 

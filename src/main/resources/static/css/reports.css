@@ -443,6 +443,68 @@ body {
     color: #212529;
 }
 
+/* Painel de Data Personalizada */
+.custom-date-panel {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.custom-date-panel.visible {
+    display: flex;
+}
+
+.custom-date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.custom-date-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+.custom-date-field input[type="date"] {
+    padding: 7px 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.custom-date-field input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.custom-date-apply {
+    margin-top: 4px;
+    padding: 8px;
+    background-color: white;
+    color: #2a5298;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.custom-date-apply:hover {
+    background-color: #e8f0fe;
+}
+
 /* Scrollbar Personalizada */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
