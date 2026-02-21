@@ -282,10 +282,8 @@ select.filtro-input { min-width: 160px; }
 svg {
     width: 24px;
     height: 24px;
-    opacity: 0.5;
     margin-right: 6px;
     vertical-align: middle;
-    fill: #000000;
 }
 
 /* Scrollbars */
