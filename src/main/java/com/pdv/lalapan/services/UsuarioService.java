@@ -63,9 +63,15 @@ public class UsuarioService {
         userRepo.save(user);
     }
 
-    public List<UsuarioResponseDTO> listarTodosAtivos() {
-        return userRepo.findByAtivoTrue().stream()
-                .map(UsuarioResponseDTO::new)
+    public List<UsuarioResponseDTO> listarTodosUsuarios() {
+        return userRepo.findAll()
+                .stream()
+                .map(u -> new UsuarioResponseDTO(
+                        u.getId(),
+                        u.getNome(),
+                        u.getUsername(),
+                        u.getAtivo()
+                ))
                 .toList();
     }
 }

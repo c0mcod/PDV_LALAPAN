@@ -30,7 +30,7 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuariosAtivos() {
-        return ResponseEntity.ok(userService.listarTodosAtivos());
+        return ResponseEntity.ok(userService.listarTodosUsuarios());
     }
 
     @GetMapping("/{id}")
@@ -41,7 +41,7 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioAtualizadoDTO> updateUser(@PathVariable Long id, @RequestBody UsuarioAtualizadoDTO dto) {
         UsuarioAtualizadoDTO response = userService.updateUser(id, dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/{id}/ativar")
