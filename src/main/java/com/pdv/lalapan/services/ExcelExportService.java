@@ -1,5 +1,6 @@
 package com.pdv.lalapan.services;
 
+import com.pdv.lalapan.dto.historicoVendas.HistoricoVendasResponseDTO;
 import com.pdv.lalapan.entities.Produto;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -53,4 +54,39 @@ public class ExcelExportService {
 
         return outputStream.toByteArray();
     }
+
+    public byte[] exportarHistoricoVendas(List<HistoricoVendasResponseDTO> vendas) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Historico de vendas");
+
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("ID VENDA");
+        headerRow.createCell(1).setCellValue("DATA_ABERTURA");
+        headerRow.createCell(2).setCellValue("DATA_FECHAMENTO");
+        headerRow.createCell(3).setCellValue("OPERADOR");
+        headerRow.createCell(4).setCellValue("VALOR_TOTAL");
+        headerRow.createCell(5).setCellValue("TOTAL_ITENS");
+
+        int rowNum = 1;
+        for(HistoricoVendasResponseDTO historico : vendas) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(historico.vendaId());
+            row.createCell(1).setCellValue(historico.dataHoraAbertura());
+            row.createCell(2).setCellValue(historico.dataHoraFechamento());
+            row.createCell(3).setCellValue(historico.operadorNome());
+            row.createCell(4).setCellValue(historico.valorTotal().doubleValue());
+            row.createCell(5).setCellValue(historico.totalItens());
+        }
+
+        for(int i = 0; i < 6; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        return outputStream.toByteArray();
+    }
+
 }

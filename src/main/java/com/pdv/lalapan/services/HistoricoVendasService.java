@@ -39,6 +39,19 @@ public class HistoricoVendasService {
         ));
     }
 
+    public List<HistoricoVendasResponseDTO> buscarHistoricoExport(LocalDateTime dataInicio, LocalDateTime dataFim, Long operadorId) {
+        return vendaRepo.buscarHistorico(dataInicio, dataFim, operadorId, Pageable.unpaged())
+                .map(venda -> new HistoricoVendasResponseDTO(
+                        venda.getId(),
+                        venda.getDataHoraAbertura(),
+                        venda.getDataHoraFechamento(),
+                        venda.getOperador().getNome(),
+                        venda.getValorTotal(),
+                        venda.getItens().size()
+                ))
+                .getContent();
+    }
+
     public VendaDetalheDTO buscarDetalhes(Long vendaId) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
