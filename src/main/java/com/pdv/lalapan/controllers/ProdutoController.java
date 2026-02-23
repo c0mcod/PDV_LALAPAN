@@ -4,6 +4,9 @@ import com.pdv.lalapan.dto.produto.*;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.services.ExcelExportService;
 import com.pdv.lalapan.services.ProdutoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +46,15 @@ public class ProdutoController {
     }
 
     @GetMapping("/lista")
+    public ResponseEntity<Page<ProdutoResponseDTO>> procurarProdutosPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(produtoService.buscarTodosProdutosPaginado(pageable));
+    }
+
+    @GetMapping("/lista-todos")
     public ResponseEntity<List<ProdutoResponseDTO>> procurarTodosProdutos() {
         return ResponseEntity.ok(produtoService.buscarTodosProdutos());
     }

@@ -5,6 +5,8 @@ import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,6 +80,12 @@ public class ProdutoService {
                 .stream()
                 .map(ProdutoResponseDTO :: new)
                 .toList();
+    }
+
+    // paginação na pagina de exibição de produtos em estoque
+    public Page<ProdutoResponseDTO> buscarTodosProdutosPaginado(Pageable pageable) {
+        return prodRepo.findByAtivoTrue(pageable)
+                .map(ProdutoResponseDTO::new);
     }
 
     public List<ProdutoEstoqueBaixoDTO> listarEstoqueBaixo() {
