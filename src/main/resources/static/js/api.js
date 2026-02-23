@@ -188,6 +188,30 @@ async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size
   return response.json();
 }
 
+async function apiExportarHistoricoVendas(operadorId, dataInicio, dataFim) {
+    try {
+        let url = `${API_BASE_URL}/historico-vendas/exportar/excel?dataInicio=${dataInicio}&dataFim=${dataFim}`;
+        if (operadorId) url += `&operadorId=${operadorId}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('Erro ao exportar');
+        }
+
+        const blob = await response.blob();
+        const urlBlob = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.download = 'historico.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(urlBlob);
+
+    } catch (error) {
+        console.error('Erro:', error);
+        showNotificationError('Erro ao exportar histórico de vendas');
+    }
+}
 /* =======================
    RELATÓRIOS
 ======================= */

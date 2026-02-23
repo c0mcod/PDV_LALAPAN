@@ -71,6 +71,13 @@ function configurarEventos() {
     if (toggleMenuBtn) {
         toggleMenuBtn.addEventListener("click", () => navMenu.classList.toggle("collapsed"));
     }
+
+    document.getElementById("btnExportar").addEventListener("click", () => {
+        const operadorId = document.getElementById("filtroOperador").value;
+        const dataInicio = document.getElementById("filtroDataInicio").value;
+        const dataFim = document.getElementById("filtroDataFim").value;
+        apiExportarHistoricoVendas(operadorId || null, `${dataInicio}T00:00:00`, `${dataFim}T23:59:59`);
+    });
 }
 
 function irParaPagina(pagina) {
