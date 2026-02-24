@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    produtos = await apiGetProducts();
+    produtos = await apiGetAllProducts();
 
     produtosMap = Object.fromEntries(produtos.map(p => [p.id, p]));
 
