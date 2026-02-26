@@ -3,6 +3,7 @@ package com.pdv.lalapan.entities;
 import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.Unidade;
 import com.pdv.lalapan.exceptions.CodigoDeBarrasInvalidoException;
+import com.pdv.lalapan.exceptions.EstoqueInsuficienteException;
 import com.pdv.lalapan.exceptions.QuantidadeInvalidaException;
 import jakarta.persistence.*;
 
@@ -141,6 +142,17 @@ public class Produto {
         this.quantidadeEstoque = this.quantidadeEstoque.add(quantidade);
     }
 
+    public void baixarEstoque(BigDecimal quantidade) {
+        if(quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new QuantidadeInvalidaException(quantidade);
+        }
+
+        if(this.quantidadeEstoque.compareTo(quantidade) < 0) {
+            throw new EstoqueInsuficienteException(this.nome, quantidade, this.quantidadeEstoque);
+        }
+
+        this.quantidadeEstoque = this.quantidadeEstoque.subtract(quantidade);
+    }
     private String formatarEAN13(String codigo) {
         codigo = codigo.replaceAll("\\D", "");
 

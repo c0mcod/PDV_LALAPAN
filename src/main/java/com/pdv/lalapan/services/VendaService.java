@@ -111,9 +111,6 @@ public class VendaService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
 
-        System.out.println("Total calculado pelo backend: " + totalVenda);
-        System.out.println("Total pago pelo frontend: " + totalPago);
-
         if (totalPago.compareTo(totalVenda) < 0) {
             throw new ValorInsuficienteException(totalPago, totalVenda);
         }
@@ -129,8 +126,6 @@ public class VendaService {
             venda.getPagamentos().add(pagamento);
         }
 
-        venda.fechar();
-
         for (VendaItens item : venda.getItens()) {
             Produto produto = item.getProduto();
 
@@ -138,10 +133,10 @@ public class VendaService {
                 throw new EstoqueInsuficienteException(produto.getNome(), item.getQuantidade(), produto.getQuantidadeEstoque());
             }
 
-            produto.setQuantidadeEstoque(
-                    produto.getQuantidadeEstoque().subtract(item.getQuantidade())
-            );
+            produto.baixarEstoque(item.getQuantidade());
         }
+
+        venda.fechar();
 
         Venda vendaFinalizada = vendaRepo.save(venda);
         return new VendaFinalizadaResponseDTO(vendaFinalizada.getId(), troco);
