@@ -30,13 +30,17 @@ async function carregarProdutos(page = 0) {
         totalPaginas = data.totalPages;
         todosOsProdutos = data.content;
         renderizarProdutos(data.content);
-        atualizarEstatisticas(data.content);
         renderizarPaginacao(data);
+
+        const todosProdutos = await apiGetAllProducts();
+        atualizarEstatisticas(todosProdutos);
+
     } catch (error) {
         console.error('Erro ao carregar produtos:', error);
         showNotificationError('Erro ao carregar produtos do servidor');
     }
 }
+
 
 // ===================================
 // RENDERIZAR TABELA DE PRODUTOS
