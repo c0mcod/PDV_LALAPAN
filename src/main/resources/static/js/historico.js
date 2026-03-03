@@ -101,20 +101,17 @@ async function buscarVendas() {
     }
 
     try {
-        const data = await apiGetHistoricoVendas(
-            `${dataInicio}T00:00:00`,
-            `${dataFim}T23:59:59`,
-            operadorId || null,
-            paginaAtual,
-            TAMANHO_PAGINA
-        );
+        const [data, stats] = await Promise.all([
+            apiGetHistoricoVendas(`${dataInicio}T00:00:00`, `${dataFim}T23:59:59`, operadorId || null, paginaAtual, TAMANHO_PAGINA),
+            apiGetHistoricoStats(`${dataInicio}T00:00:00`, `${dataFim}T23:59:59`, operadorId || null)
+        ]);
 
         totalPaginas = data.totalPages;
         totalElementos = data.totalElements;
 
         renderizarTabela(data.content);
         renderizarPaginacao(data);
-        atualizarStats(data.content, data.totalElements);
+        atualizarStats(stats);
 
     } catch (e) {
         showNotificationError("Erro ao buscar vendas.");
@@ -180,17 +177,12 @@ function renderizarPaginacao(data) {
     }
 }
 
-function atualizarStats(vendas, total) {
-    document.getElementById("statTotalVendas").textContent = total;
+function atualizarStats(stats) {
+    document.getElementById("statTotalVendas").textContent = stats.totalVendas;
+    document.getElementById("statValorTotal").textContent = `R$ ${stats.valorTotal.toFixed(2)}`;
 
-    if (vendas.length > 0) {
-        const valorTotal = vendas.reduce((soma, v) => soma + v.valorTotal, 0);
-        document.getElementById("statValorTotal").textContent = `R$ ${valorTotal.toFixed(2)}`;
-        document.getElementById("statTicketMedio").textContent = `R$ ${(valorTotal / vendas.length).toFixed(2)}`;
-    } else {
-        document.getElementById("statValorTotal").textContent = "R$ 0,00";
-        document.getElementById("statTicketMedio").textContent = "R$ 0,00";
-    }
+    const ticketMedio = stats.totalVendas > 0 ? stats.valorTotal / stats.totalVendas : 0;
+    document.getElementById("statTicketMedio").textContent = `R$ ${ticketMedio.toFixed(2)}`;
 }
 
 /* =========================

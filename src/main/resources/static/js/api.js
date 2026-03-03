@@ -12,6 +12,7 @@ async function apiGetProducts(page = 0, size = 10) {
   return response.json();
 }
 
+// Contagem sem páginação de stats
 async function apiGetAllProducts() {
   const response = await fetch(`${API_BASE_URL}/produto/lista-todos`);
   if (!response.ok) {
@@ -194,6 +195,14 @@ async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size
     throw new Error("Erro ao buscar histórico de vendas");
   }
   return response.json();
+}
+
+async function apiGetHistoricoStats(dataInicio, dataFim, operadorId) {
+    const params = new URLSearchParams({ dataInicio, dataFim });
+    if (operadorId) params.append("operadorId", operadorId);
+    const res = await fetch(`${API_BASE_URL}/historico-vendas/stats?${params}`);
+    if (!res.ok) throw new Error("Erro ao buscar stats");
+    return res.json();
 }
 
 async function apiExportarHistoricoVendas(operadorId, dataInicio, dataFim) {
