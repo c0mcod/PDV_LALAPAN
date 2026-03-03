@@ -1,5 +1,6 @@
 package com.pdv.lalapan.repositories;
 
+import com.pdv.lalapan.dto.historicoVendas.HistoricoStatsDTO;
 import com.pdv.lalapan.entities.Usuario;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.enums.StatusVenda;
@@ -95,4 +96,10 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
 """)
     Optional<Venda> buscarDetalhe(@Param("id") Long id);
 
+    @Query("SELECT new com.pdv.lalapan.dto.historicoVendas.HistoricoStatsDTO(COUNT(v), SUM(v.valorTotal)) " +
+            "FROM Venda v WHERE v.dataHoraAbertura BETWEEN :inicio AND :fim " +
+            "AND (:operadorId IS NULL OR v.operador.id = :operadorId)")
+    HistoricoStatsDTO buscarStats(@Param("inicio") LocalDateTime inicio,
+                                  @Param("fim") LocalDateTime fim,
+                                  @Param("operadorId") Long operadorId);
 }

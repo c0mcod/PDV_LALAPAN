@@ -1,5 +1,6 @@
 package com.pdv.lalapan.controllers;
 
+import com.pdv.lalapan.dto.historicoVendas.HistoricoStatsDTO;
 import com.pdv.lalapan.dto.historicoVendas.HistoricoVendasResponseDTO;
 import com.pdv.lalapan.dto.historicoVendas.VendaDetalheDTO;
 import com.pdv.lalapan.services.ExcelExportService;
@@ -35,6 +36,14 @@ public class HistoricoVendasController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(historicoService.buscarHistorico(dataInicio, dataFim, operadorId, pageable));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<HistoricoStatsDTO> buscarStats(
+            @RequestParam LocalDateTime dataInicio,
+            @RequestParam LocalDateTime dataFim,
+            @RequestParam(required = false) Long operadorId) {
+        return ResponseEntity.ok(historicoService.buscarStats(dataInicio, dataFim, operadorId));
     }
 
     @GetMapping("/detalhes/{id}")

@@ -1,5 +1,6 @@
 package com.pdv.lalapan.services;
 
+import com.pdv.lalapan.dto.historicoVendas.HistoricoStatsDTO;
 import com.pdv.lalapan.dto.historicoVendas.HistoricoVendasResponseDTO;
 import com.pdv.lalapan.dto.historicoVendas.ItemVendaDetalheDTO;
 import com.pdv.lalapan.dto.historicoVendas.VendaDetalheDTO;
@@ -37,6 +38,10 @@ public class HistoricoVendasService {
                 venda.getValorTotal(),
                 venda.getItens().size()
         ));
+    }
+
+    public HistoricoStatsDTO buscarStats(LocalDateTime dataInicio, LocalDateTime dataFim, Long operadorId) {
+        return vendaRepo.buscarStats(dataInicio, dataFim, operadorId);
     }
 
     public List<HistoricoVendasResponseDTO> buscarHistoricoExport(LocalDateTime dataInicio, LocalDateTime dataFim, Long operadorId) {
