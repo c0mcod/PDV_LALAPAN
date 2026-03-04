@@ -72,6 +72,13 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<ProdutoStatsDTO> getStats() {
+        ProdutoStatsDTO stats = produtoService.statsProdutos();
+        return ResponseEntity.ok(stats);
+    }
+
+
     @PostMapping("/{id}/adicionar-estoque")
     public ResponseEntity<ProdutoResponseDTO> adicionar(@PathVariable Long id, @RequestBody EntradaProdutoRequestDTO request) {
         ProdutoResponseDTO produtoAtualizado = produtoService.registrarEntrada(id, request);

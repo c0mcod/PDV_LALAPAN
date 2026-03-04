@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
@@ -23,4 +24,9 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidadeEstoque > p.estoqueMinimo AND p.quantidadeEstoque <= (p.estoqueMinimo * 2)")
     Integer countByQuantidadeEstoqueBetweenMinimoEIdeal();
 
+    @Query("SELECT SUM(p.preco * p.quantidadeEstoque) FROM Produto p")
+    BigDecimal totalVenda();
+
+    @Query("SELECT SUM(p.precoCusto * p.quantidadeEstoque) FROM Produto p")
+    BigDecimal totalCusto();
 }
