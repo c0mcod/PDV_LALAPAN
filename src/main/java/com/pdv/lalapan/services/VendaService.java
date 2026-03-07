@@ -72,11 +72,6 @@ public class VendaService {
 
     @Transactional
     public VendaFinalizadaResponseDTO fecharVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
-        return finalizarVenda(vendaId, dto);
-    }
-
-    @Transactional
-    public VendaFinalizadaResponseDTO finalizarVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
