@@ -5,6 +5,7 @@ import com.pdv.lalapan.enums.Unidade;
 import com.pdv.lalapan.exceptions.CodigoDeBarrasInvalidoException;
 import com.pdv.lalapan.exceptions.EstoqueInsuficienteException;
 import com.pdv.lalapan.exceptions.QuantidadeInvalidaException;
+import com.pdv.lalapan.exceptions.ValorNegativoException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -40,7 +41,32 @@ public class Produto {
     private List<VendaItens> vendaItens;
 
     // Construtor Vazio
-    public Produto () {}
+    protected Produto() {
+    }
+
+    public Produto(
+            String nome,
+            String codigo,
+            BigDecimal estoqueMinimo,
+            BigDecimal preco,
+            BigDecimal precoCusto,
+            Unidade unidade,
+            Categoria categoria,
+            BigDecimal quantidadeEstoque
+    ) {
+        validarQuantidade(quantidadeEstoque);
+        validarValor(preco);
+        validarValor(precoCusto);
+
+        this.nome = nome;
+        this.codigo = codigo;
+        this.categoria = categoria;
+        this.estoqueMinimo = estoqueMinimo;
+        this.unidade = unidade;
+        this.preco = preco;
+        this.precoCusto = precoCusto;
+        this.quantidadeEstoque = quantidadeEstoque;
+    }
 
     // Getters e Setters
     public Long getId() {
@@ -131,28 +157,64 @@ public class Produto {
         this.precoCusto = precoCusto;
     }
 
+    // ==== MÉTODOS AUXILIARES DE PRODUTO ====
+    public void atualizarProduto(
+            String nome,
+            BigDecimal preco,
+            String codigo,
+            BigDecimal precoCusto,
+            BigDecimal quantidadeEstoque,
+            Unidade unidade,
+            Categoria categoria
+    ) {
+        validarQuantidade(quantidadeEstoque);
+        validarValor(preco);
+        validarValor(precoCusto);
+
+        this.nome = nome;
+        this.preco = preco;
+        this.codigo = codigo;
+        this.precoCusto = precoCusto;
+        this.quantidadeEstoque = quantidadeEstoque;
+        this.unidade = unidade;
+        this.categoria = categoria;
+    }
+
     public boolean isEstoqueBaixo() {
         return this.quantidadeEstoque.compareTo(this.estoqueMinimo) <= 0;
     }
 
+    public void validarQuantidade(BigDecimal quantidade) {
+        if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+            throw new QuantidadeInvalidaException(quantidade);
+        }
+    }
+
+    public void validarValor(BigDecimal valor) {
+        if(valor.compareTo(BigDecimal.ZERO) == 0) {
+            throw new ValorNegativoException(valor);
+        }
+    }
+
     public void adicionarEstoque(BigDecimal quantidade) {
-        if(quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
             throw new QuantidadeInvalidaException(quantidade);
         }
         this.quantidadeEstoque = this.quantidadeEstoque.add(quantidade);
     }
 
     public void baixarEstoque(BigDecimal quantidade) {
-        if(quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
             throw new QuantidadeInvalidaException(quantidade);
         }
 
-        if(this.quantidadeEstoque.compareTo(quantidade) < 0) {
+        if (this.quantidadeEstoque.compareTo(quantidade) < 0) {
             throw new EstoqueInsuficienteException(this.nome, quantidade, this.quantidadeEstoque);
         }
 
         this.quantidadeEstoque = this.quantidadeEstoque.subtract(quantidade);
     }
+
     private String formatarEAN13(String codigo) {
         codigo = codigo.replaceAll("\\D", "");
 

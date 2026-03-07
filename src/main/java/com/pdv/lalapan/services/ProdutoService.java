@@ -21,16 +21,19 @@ public class ProdutoService {
         this.prodRepo = prodRepo;
     }
 
+    // TODO: Remover a modificação de estoque, isso deve ser administrado pelo método responsável por movimentações de quantidade e na criação.
+    @Transactional
     public ProdutoResponseDTO create(ProdutoCreatedDTO dto) {
-        Produto produto = new Produto();
-        produto.setNome(dto.nome());
-        produto.setCodigo(dto.codigo());
-        produto.setCategoria(dto.categoria());
-        produto.setEstoqueMinimo(dto.estoqueMinimo());
-        produto.setUnidade(dto.unidade());
-        produto.setPreco(dto.preco());
-        produto.setPrecoCusto(dto.precoCusto());
-        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+        Produto produto = new Produto(
+                dto.nome(),
+                dto.codigo(),
+                dto.estoqueMinimo(),
+                dto.preco(),
+                dto.precoCusto(),
+                dto.unidade(),
+                dto.categoria(),
+                dto.quantidadeEstoque()
+        );
 
         Produto salvo = prodRepo.save(produto);
 
@@ -41,13 +44,15 @@ public class ProdutoService {
         Produto produto = prodRepo.findById(produtoId)
                 .orElseThrow(() -> new ProdutoInexistenteException(produtoId));
 
-        produto.setNome(dto.nome());
-        produto.setCodigo(dto.codigo());
-        produto.setCategoria(dto.categoria());
-        produto.setUnidade(dto.unidade());
-        produto.setPreco(dto.preco());
-        produto.setPrecoCusto(dto.precoCusto());
-        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+        produto.atualizarProduto(
+                dto.nome(),
+                dto.preco(),
+                dto.codigo(),
+                dto.precoCusto(),
+                dto.quantidadeEstoque(),
+                dto.unidade(),
+                dto.categoria()
+        );
 
         Produto produtoAtualizado = prodRepo.save(produto);
 
@@ -83,7 +88,6 @@ public class ProdutoService {
                 .toList();
     }
 
-    // paginação na pagina de exibição de produtos em estoque
     public Page<ProdutoResponseDTO> buscarTodosProdutosPaginado(Pageable pageable) {
         return prodRepo.findByAtivoTrue(pageable)
                 .map(ProdutoResponseDTO::new);
