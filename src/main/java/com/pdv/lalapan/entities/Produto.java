@@ -58,8 +58,8 @@ public class Produto {
         validarValor(preco);
         validarValor(precoCusto);
 
-        this.nome = nome;
-        this.codigo = codigo;
+        this.nome = nome.toUpperCase();
+        this.codigo = formatarEAN13(codigo);
         this.categoria = categoria;
         this.estoqueMinimo = estoqueMinimo;
         this.unidade = unidade;
@@ -171,9 +171,9 @@ public class Produto {
         validarValor(preco);
         validarValor(precoCusto);
 
-        this.nome = nome;
+        this.nome = nome.toUpperCase();
         this.preco = preco;
-        this.codigo = codigo;
+        this.codigo = formatarEAN13(codigo);
         this.precoCusto = precoCusto;
         this.quantidadeEstoque = quantidadeEstoque;
         this.unidade = unidade;
