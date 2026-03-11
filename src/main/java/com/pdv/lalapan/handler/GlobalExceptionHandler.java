@@ -40,6 +40,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
 
+    @ExceptionHandler(QuantidadeInvalidaException.class)
+    public ResponseEntity<ErroResponse> handlerQuantidadeInvalida(QuantidadeInvalidaException e) {
+        ErroResponse erro = new ErroResponse(
+                e.getMessage(),
+                LocalDateTime.now(),
+                400,
+                null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(ValorNegativoException.class)
+    public ResponseEntity<ErroResponse> handlerValorNegativo(ValorNegativoException e) {
+        ErroResponse erro = new ErroResponse(
+                e.getMessage(),
+                LocalDateTime.now(),
+                400,
+                null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
     @ExceptionHandler(ProdutoInexistenteException.class)
     public ResponseEntity<ErroResponse> handlerProdutoNaoEncontrado(ProdutoInexistenteException e) {
         ErroResponse erro = new ErroResponse(
