@@ -20,8 +20,13 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class ImpressoraService {
+    // nome da impressora definida em application.properties
     @Value("${pdv.printer.name}")
     private String printerName;
+
+    // ativar ou desativar o método de impressão(valor definido em application.properties)
+    @Value("${pdv.printer.enabled:true}")
+    private boolean printerEnabled;
 
     public static String removerAcentos(String texto) {
         return Normalizer.normalize(texto, Normalizer.Form.NFD)
@@ -38,6 +43,7 @@ public class ImpressoraService {
     }
 
     public void imprimirCupom(ImpressaoDTO dto, String operador) throws Exception {
+        if (!printerEnabled) return;
         try (EscPos escpos = conectar()) {
 
             Style titulo = new Style()
