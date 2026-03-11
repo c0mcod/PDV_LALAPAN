@@ -10,6 +10,7 @@ public record VendaDetalheDTO(
         LocalDateTime dataHoraAbertura,
         LocalDateTime dataHoraFechamento,
         BigDecimal valorTotal,
-        List<ItemVendaDetalheDTO> itens
+        List<ItemVendaDetalheDTO> itens,
+        List<PagamentoDetalheDTO> pagamentos
         ) {
 }

@@ -1,9 +1,6 @@
 package com.pdv.lalapan.services;
 
-import com.pdv.lalapan.dto.historicoVendas.HistoricoStatsDTO;
-import com.pdv.lalapan.dto.historicoVendas.HistoricoVendasResponseDTO;
-import com.pdv.lalapan.dto.historicoVendas.ItemVendaDetalheDTO;
-import com.pdv.lalapan.dto.historicoVendas.VendaDetalheDTO;
+import com.pdv.lalapan.dto.historicoVendas.*;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.exceptions.VendaNaoAbertaException;
@@ -75,13 +72,20 @@ public class HistoricoVendasService {
                 ))
                 .toList();
 
+        List<PagamentoDetalheDTO> pagamentos = venda.getPagamentos()
+                .stream()
+                .map(p -> new PagamentoDetalheDTO(p.getMetodo(), p.getValor()))
+                .toList();
+
+
         return new VendaDetalheDTO(
                 venda.getId(),
                 venda.getOperador().getNome(),
                 venda.getDataHoraAbertura(),
                 venda.getDataHoraFechamento(),
                 venda.getValorTotal(),
-                itens
+                itens,
+                pagamentos
         );
     }
 }

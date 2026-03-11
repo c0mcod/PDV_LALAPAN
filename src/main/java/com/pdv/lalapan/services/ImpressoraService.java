@@ -5,6 +5,7 @@ import com.github.anastaciocintra.escpos.EscPosConst;
 import com.github.anastaciocintra.escpos.Style;
 import com.github.anastaciocintra.output.PrinterOutputStream;
 import com.pdv.lalapan.dto.impressao.ImpressaoDTO;
+import com.pdv.lalapan.dto.venda.PagamentoRequestDTO;
 import com.pdv.lalapan.dto.venda.VendaItemDTO;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
@@ -75,6 +76,12 @@ public class ImpressoraService {
 
             // Total
             Style bold = new Style().setBold(true);
+
+            escpos.writeLF("--------------------------------");
+            for (PagamentoRequestDTO pag : dto.pagamentos()) {
+                escpos.writeLF(removerAcentos(pag.metodo().toString()) + ": R$ " + pag.valor());
+            }
+
             escpos.writeLF("--------------------------------");
             escpos.writeLF(bold, "TOTAL: R$ " + dto.valorTotal());
 
