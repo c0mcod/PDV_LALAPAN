@@ -24,9 +24,9 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidadeEstoque > p.estoqueMinimo AND p.quantidadeEstoque <= (p.estoqueMinimo * 2)")
     Integer countByQuantidadeEstoqueBetweenMinimoEIdeal();
 
-    @Query("SELECT SUM(p.preco * p.quantidadeEstoque) FROM Produto p")
+    @Query("SELECT SUM(p.preco * p.quantidadeEstoque) FROM Produto p WHERE ativo = true")
     BigDecimal totalVenda();
 
-    @Query("SELECT SUM(p.precoCusto * p.quantidadeEstoque) FROM Produto p")
+    @Query("SELECT SUM(p.precoCusto * p.quantidadeEstoque) FROM Produto p WHERE ativo = true")
     BigDecimal totalCusto();
 }
