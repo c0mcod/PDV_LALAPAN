@@ -70,11 +70,10 @@ public class VendaService {
 
         venda.validarStatus(vendaId);
         VendaItens item = venda.registrarProduto(produto, dto.quantidade());
-        Venda vendaSalva = vendaRepo.save(venda);
 
         return new VendaAddItemResponseDTO(
-                vendaSalva.getId(),
-                vendaSalva.getValorTotal(),
+                venda.getId(),
+                venda.getValorTotal(),
                 item.getId()
         );
     }
@@ -111,8 +110,6 @@ public class VendaService {
                 dto.pagamentos()
         );
 
-        vendaRepo.save(venda);
-
         /*
         * Chama metodo para impressão de cupom não fiscal
         * Para garantir a transação finalize perfeitamente, só é chamado após salvar no banco
@@ -132,10 +129,10 @@ public class VendaService {
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
         venda.cancelar();
-        Venda vendaSalva = vendaRepo.save(venda);
+
         return new CancelarVendaDTO(
-                vendaSalva.getId(),
-                vendaSalva.getStatus()
+                venda.getId(),
+                venda.getStatus()
         );
     }
 
@@ -146,10 +143,9 @@ public class VendaService {
 
         venda.validarStatus(vendaId);
         venda.removerItem(vendaItemId);
-        Venda vendaSalva = vendaRepo.save(venda);
 
         return new CancelarItemDTO(
-                vendaSalva.getId(),
+                venda.getId(),
                 vendaItemId
         );
     }

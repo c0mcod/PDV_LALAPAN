@@ -128,6 +128,7 @@ public class Venda {
     public VendaItens registrarProduto(Produto produto, BigDecimal quantidade){
         VendaItens item = new VendaItens();
 
+        item.setVenda(this);
         item.setProduto(produto);
         item.setQuantidade(quantidade);
         item.setPrecoUnitario(produto.getPreco());
@@ -172,16 +173,18 @@ public class Venda {
     }
 
     public void removerItem(Long vendaItemId) {
-        if(this.status != StatusVenda.ABERTA) {
+
+        if (this.status != StatusVenda.ABERTA) {
             throw new VendaNaoAbertaException(this.getStatus(), this.getId());
         }
 
-        boolean removido = this.itens.removeIf(item ->
-                item.getId().equals(vendaItemId));
+        VendaItens item = this.itens.stream()
+                .filter(i -> i.getId().equals(vendaItemId))
+                .findFirst()
+                .orElseThrow(() -> new ItemNaoEncontradoException(vendaItemId));
 
-        if(!removido) {
-            throw new ItemNaoEncontradoException(vendaItemId);
-        }
+        this.itens.remove(item);
+        item.setVenda(null);
 
         recalcularValorTotal();
     }
