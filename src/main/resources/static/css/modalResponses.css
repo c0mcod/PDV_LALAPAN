@@ -108,3 +108,21 @@
   background-color: #1b5e20;
   opacity: 0.9;
 }
+
+.notification-confirm-icon svg {
+    fill: #333;
+}
+
+.notification-btn-success {
+    background-color: #22c55e;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.notification-btn-success:hover {
+    background-color: #16a34a;
+}

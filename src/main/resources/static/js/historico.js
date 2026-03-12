@@ -178,10 +178,12 @@ function renderizarPaginacao(data) {
 }
 
 function atualizarStats(stats) {
-    document.getElementById("statTotalVendas").textContent = stats.totalVendas;
-    document.getElementById("statValorTotal").textContent = `R$ ${stats.valorTotal.toFixed(2)}`;
+    const totalVendas = stats.totalVendas ?? 0;
+    const valorTotal = stats.valorTotal ?? 0;
+    const ticketMedio = totalVendas > 0 ? valorTotal / totalVendas : 0;
 
-    const ticketMedio = stats.totalVendas > 0 ? stats.valorTotal / stats.totalVendas : 0;
+    document.getElementById("statTotalVendas").textContent = totalVendas;
+    document.getElementById("statValorTotal").textContent = `R$ ${valorTotal.toFixed(2)}`;
     document.getElementById("statTicketMedio").textContent = `R$ ${ticketMedio.toFixed(2)}`;
 }
 

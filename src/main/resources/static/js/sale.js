@@ -289,8 +289,48 @@ function renderizarItens() {
    CANCELAR VENDA
 ========================= */
 
+let resolveConfirm = null;
+
+function showNotificationConfirm(message) {
+    const modal = document.getElementById("notificationConfirmModal");
+    document.getElementById("notificationConfirmMessage").textContent = message;
+    modal.style.display = "flex";
+
+    const botoes = modal.querySelectorAll("button");
+    botoes[0].focus();
+
+    document.addEventListener("keydown", trapFocus);
+
+    return new Promise((resolve) => {
+        resolveConfirm = (result) => {
+            modal.style.display = "none";
+            document.removeEventListener("keydown", trapFocus);
+            resolve(result);
+        };
+    });
+}
+
+function trapFocus(e) {
+    if (e.key !== "Tab") return;
+    e.preventDefault();
+
+    const modal = document.getElementById("notificationConfirmModal");
+    const botoes = [...modal.querySelectorAll("button")];
+    const primeiro = botoes[0];
+    const ultimo = botoes[botoes.length - 1];
+
+    if (e.shiftKey) {
+        if (document.activeElement === primeiro) ultimo.focus();
+        else primeiro.focus();
+    } else {
+        if (document.activeElement === ultimo) primeiro.focus();
+        else ultimo.focus();
+    }
+}
+
 btnCancelarVenda.addEventListener("click", async () => {
-  if (!confirm("Cancelar a venda atual?")) return;
+  const confirmado = await showNotificationConfirm("Cancelar a venda atual?");
+  if (!confirmado) return;
 
   btnCancelarVenda.disabled = true;
   const textoOriginal = btnCancelarVenda.textContent;
@@ -412,10 +452,11 @@ btnConfirmarFinalizacao.addEventListener("click", async () => {
 
 document.addEventListener("keydown", (e) => {
   const modalAberto = modalPagamento.style.display === "block";
+  const confirmModalAberto = document.getElementById("notificationConfirmModal").style.display === "flex";
   const tag = document.activeElement.tagName;
   const digitandoEmInput = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
 
-  if (!modalAberto && e.key === "Tab") {
+  if (!modalAberto && !confirmModalAberto && e.key === "Tab") {
     e.preventDefault();
     if (document.activeElement === produtoCodigoInput) {
       quantidadeInput.focus();
@@ -425,7 +466,7 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  if (modalAberto && e.key === "Tab") {
+  if (modalAberto && !confirmModalAberto && e.key === "Tab") {
     e.preventDefault();
     if (document.activeElement === metodoPagamentoSelect) {
       valorRecebidoInput.focus();
@@ -435,7 +476,7 @@ document.addEventListener("keydown", (e) => {
     }
   }
 
-  if (!modalAberto) {
+  if (!modalAberto && !confirmModalAberto) {
     if (e.key === "f" || e.key === "F") {
       const isDigitandoCodigo = (document.activeElement === produtoCodigoInput && produtoCodigoInput.value.trim() !== "");
       if (!digitandoEmInput || !isDigitandoCodigo) {
@@ -445,7 +486,8 @@ document.addEventListener("keydown", (e) => {
     }
 
     if (e.key === "c" || e.key === "C") {
-      if (!digitandoEmInput) {
+      const isDigitandoCodigo = (document.activeElement === produtoCodigoInput && produtoCodigoInput.value.trim() !== "");
+      if (!digitandoEmInput || !isDigitandoCodigo) {
         e.preventDefault();
         btnCancelarVenda.click();
       }
