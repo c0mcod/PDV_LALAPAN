@@ -250,7 +250,7 @@ function editarProduto(produtoId) {
 }
 
 async function excluirProduto(produtoId) {
-    await fetch(`${API_BASE_URL}/produto/${produtoId}`, { method: 'DELETE' });
+    await apiDeleteProducts(produtoId);
     await carregarProdutos();
 }
 
@@ -392,24 +392,13 @@ async function atualizarProduto() {
     };
 
     try {
-        const response = await fetch(`http://localhost:8090/produto/atualiza/${produtoId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(produtoAtualizado)
-        });
-
-        if (response.ok) {
-            showNotificationSuccess('Produto atualizado com sucesso!');
-            modal.style.display = 'none';
-            await carregarProdutos();
-        } else {
-            showNotificationError('Erro ao atualizar produto!');
-        }
+    await apiAtualizarProduct(produtoId, produtoAtualizado);
+    showNotificationSuccess('Produto atualizado com sucesso!');
+    modal.style.display = 'none';
+    await carregarProdutos();
     } catch (error) {
-        console.error('Erro:', error);
-        showNotificationError('Erro ao conectar com o servidor!');
+    console.error('Erro:', error);
+    showNotificationError('Erro ao atualizar produto!');
     }
 }
 

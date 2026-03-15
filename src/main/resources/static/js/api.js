@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8090";
+const API_BASE_URL = "http://localhost:8080";
 
 /* =======================
    PRODUTOS
@@ -28,6 +28,16 @@ async function apiGetStatsProducts() {
     throw new Error("Erro ao buscar Stats");
   }
   return response.json();
+}
+
+async function apiAtualizarProduct(id, produto) {
+    const response = await fetch(`${API_BASE_URL}/produto/atualiza/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(produto)
+    });
+    if (!response.ok) throw new Error("Erro ao atualizar produto");
+    return response.json();
 }
 
 async function apiRegistrarEntrada(produtoId, quantidade) {
