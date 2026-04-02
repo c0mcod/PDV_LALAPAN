@@ -6,6 +6,9 @@ import com.pdv.lalapan.dto.historicoVendas.VendaDetalheDTO;
 import com.pdv.lalapan.services.ExcelExportService;
 import com.pdv.lalapan.services.HistoricoVendasService;
 import com.pdv.lalapan.services.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/historico-vendas")
+@Tag(name = "Histórico de Vendas", description = "Endpoints para consulta e exportação do histórico de vendas")
 public class HistoricoVendasController {
 
     private final HistoricoVendasService historicoService;
@@ -32,16 +36,18 @@ public class HistoricoVendasController {
     }
 
     @GetMapping
+    @Operation(summary = "Buscar vendas", description = "Retorna as vendas paginadas filtradas por período e operador")
     public ResponseEntity<Page<HistoricoVendasResponseDTO>> buscarVendas(
             @RequestParam LocalDateTime dataInicio,
             @RequestParam LocalDateTime dataFim,
             @RequestParam(required = false) Long operadorId,
-            Pageable pageable
+            @Parameter(hidden = true) Pageable pageable
     ) {
         return ResponseEntity.ok(historicoService.buscarHistorico(dataInicio, dataFim, operadorId, pageable));
     }
 
     @GetMapping("/stats")
+    @Operation(summary = "Buscar estatísticas", description = "Retorna estatísticas das vendas filtradas por período e operador")
     public ResponseEntity<HistoricoStatsDTO> buscarStats(
             @RequestParam LocalDateTime dataInicio,
             @RequestParam LocalDateTime dataFim,
@@ -50,16 +56,18 @@ public class HistoricoVendasController {
     }
 
     @GetMapping("/detalhes/{id}")
+    @Operation(summary = "Buscar detalhes da venda", description = "Retorna os detalhes de uma venda pelo ID")
     public ResponseEntity<VendaDetalheDTO> gerarDetalhes(@PathVariable Long id) {
         VendaDetalheDTO response = historicoService.buscarDetalhes(id);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/exportar/excel")
+    @Operation(summary = "Exportar para Excel", description = "Exporta o histórico de vendas em formato .xlsx")
     public ResponseEntity<byte[]> exportarExcel(
             @RequestParam(required = false) Long operadorId,
             @RequestParam(required = false) String dataInicio,
-            @RequestParam(required = false) String dataFim ) throws IOException {
+            @RequestParam(required = false) String dataFim) throws IOException {
 
         LocalDateTime inicio = dataInicio != null
                 ? LocalDateTime.parse(dataInicio)
